@@ -1,7 +1,3 @@
-# I5 GUI Implementation
-
-Individual assignment 5 for CS4300 
-
 ## Build
 The Flutter SDK would be needed in order to run flutter. 
 
