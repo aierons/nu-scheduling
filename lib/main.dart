@@ -296,6 +296,90 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 
+  // Border for cards
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+        border: Border.all(color: Colors.white, width: 1),
+        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        color: Colors.white,
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 0.6,
+              blurRadius: 5,
+              // LTRB
+              offset: Offset(
+                0, // move 10 right
+                3, // move 10 down
+              ))
+        ]);
+  }
+
+  // Return text section with title, name, date info
+  Widget _buildInfoSection(String title, String name, String loc) => Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // Title+name, location, time+day
+        children: <Widget>[
+          // Title+name
+          Container(
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
+              child: Row(children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                ),
+                SizedBox(width: 8),
+                Text(name,
+                    style: TextStyle(color: Colors.grey[500], fontSize: 18))
+              ])),
+          Container(
+              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+              child: Row(children: <Widget>[
+                Icon(Icons.location_on, color: Theme.of(context).accentColor),
+                Text(
+                  loc,
+                )
+              ])),
+          Container(
+              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+              child: Row(children: <Widget>[
+                Icon(Icons.access_time, color: Theme.of(context).accentColor),
+                Text(
+                  "2pm - 3pm",
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "M",
+                )
+              ]))
+        ],
+      ));
+
+  // Returns a meeting card
+  Widget _buildCard(
+      BuildContext context, String title, String name, String loc) {
+    String img = loc == "Snell Library" ? "snell" : "curry";
+    return Container(
+      padding: const EdgeInsets.all(0),
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      child: Row(
+        // Card info, picture
+        children: <Widget>[
+          // Card info side
+          _buildInfoSection(title, name, loc),
+          ClipRRect(
+              child: Image.asset('images/$img.jpg',
+                  width: 125, height: 150, fit: BoxFit.cover),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8)))
+        ],
+      ),
+      decoration: _cardDecoration(),
+    );
+  }
+
   Widget _buildPanel() {
     return ExpansionPanelList(
       expansionCallback: (int index, bool isExpanded) {
