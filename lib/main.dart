@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 import 'draw.dart';
-import 'http.dart';
+import 'card.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
@@ -24,9 +27,236 @@ class _MyPageViewState extends State<MyPageView> {
     initialPage: 0,
   );
 
+  final _textController = new TextEditingController();
+
+  String _displayValue = "";
+
+  _onSubmitted(String value) {
+    setState(() => _displayValue = value);
+  }
+
+  final format = DateFormat("yyyy-MM-dd HH:mm");
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  // Widget createMeeting() {
+  //   if (_pageController.page == 0) {
+  //     return FloatingActionButton(
+  //       onPressed: () {
+  //         if (_pageController.hasClients) {
+  //           _pageController.animateToPage(
+  //             1,
+  //             duration: const Duration(milliseconds: 400),
+  //             curve: Curves.easeInOut,
+  //           );
+  //         }
+  //         // Navigator.push(
+  //         //     context,
+  //         //     MaterialPageRoute(
+  //         //         builder: (BuildContext context) => titleSetup));
+  //       },
+  //       child: Icon(Icons.add),
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
+
+    Widget homePage = Container(
+      child: Center(
+        child: ListView(
+          children: <Widget>[
+            Card(
+              child: ListTile(
+                //leading: FlutterLogo(size: 56.0),
+                title: Text(_textController.text),
+                subtitle: Text('location, date, time'),
+                trailing: Icon(Icons.more_vert),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Widget titleSetup = Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            child: FlatButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.animateToPage(
+                    0,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Icon(Icons.arrow_left),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            child: FlatButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.animateToPage(
+                    2,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Icon(Icons.arrow_right),
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            child: Center(
+              child: TextField(
+                controller: _textController,
+                onSubmitted: _onSubmitted,
+              ),
+            ),
+          ),
+        ),
+        // new Container(
+        //   child: Center(child: BasicDateTimeField()),
+        // ),
+      ],
+    );
+
+    Widget dateTimeSetup = Stack(children: <Widget>[
+      Center(
+        child: Text('Select date and time'),
+      ),
+      Center(
+        child: DateTimeField(
+          format: format,
+          onShowPicker: (context, currentValue) async {
+            final date = await showDatePicker(
+                context: context,
+                firstDate: DateTime(1900),
+                initialDate: currentValue ?? DateTime.now(),
+                lastDate: DateTime(2100));
+            if (date != null) {
+              final time = await showTimePicker(
+                context: context,
+                initialTime:
+                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+              );
+              return DateTimeField.combine(date, time);
+            } else {
+              return currentValue;
+            }
+          },
+        ),
+      ),
+      Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          child: FlatButton(
+            onPressed: () {
+              if (_pageController.hasClients) {
+                _pageController.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            child: Icon(Icons.arrow_left),
+          ),
+        ),
+      ),
+      Align(
+        alignment: Alignment.topRight,
+        child: Container(
+          child: FlatButton(
+            onPressed: () {
+              if (_pageController.hasClients) {
+                _pageController.animateToPage(
+                  3,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            child: Icon(Icons.arrow_right),
+          ),
+        ),
+      ),
+    ]);
+
+    Widget memberSetup = Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.topLeft,
+          child: Container(
+            child: FlatButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.animateToPage(
+                    2,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Icon(Icons.arrow_left),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            child: RaisedButton(
+              onPressed: () {
+                if (_pageController.hasClients) {
+                  _pageController.animateToPage(
+                    0,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Icon(Icons.check),
+            ),
+          ),
+        ),
+        Center(
+          child: TextFormField(
+            controller: _textController,
+            decoration: const InputDecoration(
+              icon: Icon(Icons.person),
+              hintText: 'Invite people here!',
+              labelText: 'Name *',
+            ),
+          ),
+        )
+      ],
+    );
 
     return MaterialApp(
       home: Scaffold(
@@ -75,59 +305,24 @@ class _MyPageViewState extends State<MyPageView> {
                 curve: Curves.easeInOut,
               );
             }
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (BuildContext context) => titleSetup));
           },
           child: Icon(Icons.add),
         ),
+        //visible: true, //(_pageController.page == 0 ? true : false),
+
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: PageView(
           controller: _pageController,
           children: [
-            Container(
-              child: Center(
-                child: ListView(
-                  children: const <Widget>[
-                    Card(child: ListTile(title: Text('One-line ListTile'))),
-                    Card(
-                      child: ListTile(
-                        leading: FlutterLogo(),
-                        title: Text('One-line with leading widget'),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        title: Text('One-line with trailing widget'),
-                        trailing: Icon(Icons.more_vert),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        leading: FlutterLogo(),
-                        title: Text('One-line with both widgets'),
-                        trailing: Icon(Icons.more_vert),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              child: Center(
-                child: RaisedButton(
-                  color: Colors.white,
-                  onPressed: () {
-                    if (_pageController.hasClients) {
-                      _pageController.animateToPage(
-                        0,
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                  child: Text('Previous'),
-                ),
-              ),
-            ),
+            homePage,
+            titleSetup,
+            //locationSetup,
+            dateTimeSetup,
+            memberSetup,
           ],
         ),
       ),
@@ -290,15 +485,6 @@ class MyApp extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MyPanel()),
-                );
-              },
-            ),
-            RaisedButton(
-              child: Text('Fetch Data from Website/API'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PostDetail()),
                 );
               },
             ),
@@ -608,161 +794,6 @@ class MyPanel extends StatelessWidget {
         appBar: AppBar(title: const Text(_title)),
         body: MyStatefulWidget(),
       ),
-    );
-  }
-}
-
-// stores ExpansionPanel state information
-class Item {
-  Item({
-    this.expandedValue,
-    this.headerValue,
-    this.isExpanded = false,
-  });
-
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List.generate(numberOfItems, (int index) {
-    return Item(
-      headerValue: 'Panel $index',
-      expandedValue: 'This is item number $index',
-    );
-  });
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  List<Item> _data = generateItems(8);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        child: _buildPanel(),
-      ),
-    );
-  }
-
-  // Border for cards
-  BoxDecoration _cardDecoration() {
-    return BoxDecoration(
-        border: Border.all(color: Colors.white, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 0.6,
-              blurRadius: 5,
-              // LTRB
-              offset: Offset(
-                0, // move 10 right
-                3, // move 10 down
-              ))
-        ]);
-  }
-
-  // Return text section with title, name, date info
-  Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        // Title+name, location, time+day
-        children: <Widget>[
-          // Title+name
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
-              child: Row(children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-                ),
-                SizedBox(width: 8),
-                Text(name,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 18))
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.location_on, color: Theme.of(context).accentColor),
-                Text(
-                  loc,
-                )
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.access_time, color: Theme.of(context).accentColor),
-                Text(
-                  "2pm - 3pm",
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "M",
-                )
-              ]))
-        ],
-      ));
-
-  // Returns a meeting card
-  Widget _buildCard(
-      BuildContext context, String title, String name, String loc) {
-    String img = loc == "Snell Library" ? "snell" : "curry";
-    return Container(
-      padding: const EdgeInsets.all(0),
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-      child: Row(
-        // Card info, picture
-        children: <Widget>[
-          // Card info side
-          _buildInfoSection(title, name, loc),
-          ClipRRect(
-              child: Image.asset('images/$img.jpg',
-                  width: 125, height: 150, fit: BoxFit.cover),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8)))
-        ],
-      ),
-      decoration: _cardDecoration(),
-    );
-  }
-
-  Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((Item item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text(item.headerValue),
-            );
-          },
-          body: ListTile(
-              title: Text(item.expandedValue),
-              subtitle: Text('To delete this panel, tap the trash can icon'),
-              trailing: Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  _data.removeWhere((currentItem) => item == currentItem);
-                });
-              }),
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
     );
   }
 }
