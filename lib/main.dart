@@ -11,23 +11,23 @@ import 'home_page.dart';
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
-  // debugPaintSizeEnabled = true;
-  // runApp(MaterialApp(
-  //   title: 'NuSchedule',
-  //   home: MyPageView(),
-  // ));
-  runApp(ChangeNotifierProvider(
-      create: (context) => InvitePageModel(),
-      child: Consumer<InvitePageModel>(builder: (context, model, child) {
-        return MaterialApp(
-            title: 'NU Scheduling',
-            //home: MyPageView(),
-            initialRoute: "/invitepage",
-            routes: {
-              "/": (BuildContext context) => MyPageView(),
-              "/invitepage": (BuildContext context) => InvitePage(),
-            });
-      })));
+//debugPaintSizeEnabled = true;
+  runApp(MaterialApp(
+    title: 'NuSchedule',
+    home: MyPageView(),
+  ));
+  // runApp(ChangeNotifierProvider(
+  //     create: (context) => InvitePageModel(),
+  //     child: Consumer<InvitePageModel>(builder: (context, model, child) {
+  //       return MaterialApp(
+  //           title: 'NU Scheduling',
+  //           //home: MyPageView(),
+  //           initialRoute: "/invitepage",
+  //           routes: {
+  //             "/": (BuildContext context) => MyPageView(),
+  //             "/invitepage": (BuildContext context) => InvitePage(),
+  //           });
+  //     })));
 }
 
 class MyPageView extends StatefulWidget {
@@ -147,12 +147,14 @@ class _MyPageViewState extends State<MyPageView> {
         ),
         Center(
           child: Container(
-            child: Center(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _onSubmitted,
-              ),
+            width: 300.0,
+            child: TextField(
+              controller: _textController,
+              onSubmitted: _onSubmitted,
+              decoration:
+                  new InputDecoration.collapsed(hintText: 'Title of Meeting'),
             ),
+            // ),
           ),
         ),
         // new Container(
@@ -332,7 +334,7 @@ class _MyPageViewState extends State<MyPageView> {
         body: PageView(
           controller: _pageController,
           children: [
-            HomePage(),
+            homePage,
             titleSetup,
             //locationSetup,
             dateTimeSetup,
@@ -340,272 +342,6 @@ class _MyPageViewState extends State<MyPageView> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ArticleDescription extends StatelessWidget {
-  _ArticleDescription({
-    Key key,
-    this.title,
-    this.subtitle,
-    this.author,
-    this.publishDate,
-    this.readDuration,
-  }) : super(key: key);
-
-  final String title;
-  final String subtitle;
-  final String author;
-  final String publishDate;
-  final String readDuration;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                '$title',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-              Text(
-                '$subtitle',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black54,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                '$author',
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black87,
-                ),
-              ),
-              Text(
-                '$publishDate · $readDuration ★',
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black54,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class CustomListItemTwo extends StatelessWidget {
-  CustomListItemTwo({
-    Key key,
-    this.thumbnail,
-    this.title,
-    this.subtitle,
-    this.author,
-    this.publishDate,
-    this.readDuration,
-  }) : super(key: key);
-
-  final Widget thumbnail;
-  final String title;
-  final String subtitle;
-  final String author;
-  final String publishDate;
-  final String readDuration;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: SizedBox(
-        height: 100,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            AspectRatio(
-              aspectRatio: 1.0,
-              child: thumbnail,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
-                child: _ArticleDescription(
-                  title: title,
-                  subtitle: subtitle,
-                  author: author,
-                  publishDate: publishDate,
-                  readDuration: readDuration,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomListItem extends StatelessWidget {
-  const CustomListItem({
-    this.thumbnail,
-    this.title,
-    this.user,
-    this.viewCount,
-  });
-
-  final Widget thumbnail;
-  final String title;
-  final String user;
-  final int viewCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: thumbnail,
-          ),
-          Expanded(
-            flex: 3,
-            child: _VideoDescription(
-              title: title,
-              user: user,
-              viewCount: viewCount,
-            ),
-          ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _VideoDescription extends StatelessWidget {
-  const _VideoDescription({
-    Key key,
-    this.title,
-    this.user,
-    this.viewCount,
-  }) : super(key: key);
-
-  final String title;
-  final String user;
-  final int viewCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0,
-            ),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            user,
-            style: const TextStyle(fontSize: 10.0),
-          ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '$viewCount views',
-            style: const TextStyle(fontSize: 10.0),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// buttons
-class FavoriteWidget extends StatefulWidget {
-  @override
-  _FavoriteWidgetState createState() => _FavoriteWidgetState();
-}
-
-class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
-  int _favoriteCount = 41;
-  bool _isChecked = false;
-
-  // ···
-  void _toggleFavorite() {
-    setState(() {
-      if (_isFavorited) {
-        _favoriteCount -= 1;
-        _isFavorited = false;
-      } else {
-        _favoriteCount += 1;
-        _isFavorited = true;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.all(0),
-          child: IconButton(
-            icon: (_isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
-            color: Colors.red[500],
-            onPressed: _toggleFavorite,
-            tooltip: 'tooltip',
-          ),
-        ),
-        SizedBox(
-          width: 18,
-          child: Container(
-            child: Text('$_favoriteCount'),
-          ),
-        ),
-        Checkbox(
-          value: _isChecked,
-          onChanged: (value) {
-            setState(() {
-              _isChecked = value;
-            });
-          },
-        )
-      ],
     );
   }
 }
