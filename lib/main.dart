@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'draw.dart';
-import 'card.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
@@ -479,15 +477,6 @@ class MyApp extends StatelessWidget {
                 message: 'tooltip',
                 child:
                     new Text('tooltip, press the button above for drawing^')),
-            RaisedButton(
-              child: Text('Labeled Panel'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyPanel()),
-                );
-              },
-            ),
           ],
         ),
       ),
@@ -778,22 +767,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           },
         )
       ],
-    );
-  }
-}
-
-/// panel implementation with GUI componenets
-class MyPanel extends StatelessWidget {
-  static const String _title = 'Panel';
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: MyStatefulWidget(),
-      ),
     );
   }
 }
