@@ -8,47 +8,184 @@ import 'http.dart';
 void main() {
   // debugPaintSizeEnabled = true;
   runApp(MaterialApp(
-    title: 'i5 title?',
-    home: MyApp(),
+    title: 'NuSchedule',
+    home: MyPageView(),
   ));
+}
+
+class MyPageView extends StatefulWidget {
+  MyPageView({Key key}) : super(key: key);
+
+  _MyPageViewState createState() => _MyPageViewState();
+}
+
+class _MyPageViewState extends State<MyPageView> {
+  final _pageController = PageController(
+    initialPage: 0,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    Color color = Theme.of(context).primaryColor;
+
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text('NU Schedule')),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: const <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  'Drawer Header',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.message),
+                title: Text('Messages'),
+              ),
+              ListTile(
+                leading: Icon(Icons.account_circle),
+                title: Text('Profile'),
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('Settings'),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Container(height: 50.0),
+          color: Colors.blueGrey,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (_pageController.hasClients) {
+              _pageController.animateToPage(
+                1,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              );
+            }
+          },
+          child: Icon(Icons.add),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: PageView(
+          controller: _pageController,
+          children: [
+            Container(
+              child: Center(
+                child: ListView(
+                  children: const <Widget>[
+                    Card(child: ListTile(title: Text('One-line ListTile'))),
+                    Card(
+                      child: ListTile(
+                        leading: FlutterLogo(),
+                        title: Text('One-line with leading widget'),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: Text('One-line with trailing widget'),
+                        trailing: Icon(Icons.more_vert),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        leading: FlutterLogo(),
+                        title: Text('One-line with both widgets'),
+                        trailing: Icon(Icons.more_vert),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.blue,
+              child: Center(
+                child: RaisedButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Text('Previous'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // checkbox
-    Widget titleSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Row(
-        children: [
-          Expanded(
-            /*1*/
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*2*/
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Text(
-                    'Location',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  'Time & Date',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                  ),
-                ),
-              ],
-            ),
+    Widget infoSection = ListView(
+      children: const <Widget>[
+        Card(child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(),
+            title: Text('One-line with leading widget'),
           ),
-          /*3*/
-          FavoriteWidget(),
-        ],
-      ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('One-line with trailing widget'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(),
+            title: Text('One-line with both widgets'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('One-line dense ListTile'),
+            dense: true,
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 56.0),
+            title: Text('Two-line ListTile'),
+            subtitle: Text('Here is a second line'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 72.0),
+            title: Text('Three-line ListTile'),
+            subtitle:
+                Text('A sufficiently long subtitle warrants three lines.'),
+            trailing: Icon(Icons.more_vert),
+            isThreeLine: true,
+          ),
+        ),
+      ],
     );
 
     Color color = Theme.of(context).primaryColor;
@@ -76,7 +213,7 @@ class MyApp extends StatelessWidget {
       title: 'I5 Assignment',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Fast Prototype for Schedluing App'),
+          title: Text('NuSchedule'),
         ),
         drawer: Drawer(
           child: ListView(
@@ -111,13 +248,24 @@ class MyApp extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            Image.asset(
-              'images/lotr.jpg',
-              width: 600,
-              height: 240,
-              fit: BoxFit.cover,
+            Card(
+              child: ListTile(
+                leading: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () {},
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    alignment: Alignment.center,
+                    child: CircleAvatar(),
+                  ),
+                ),
+                title: Text('title'),
+                subtitle: Text(''),
+                dense: false,
+              ),
             ),
-            titleSection,
             buttonSection,
             textSection,
             TextField(
@@ -178,6 +326,215 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ArticleDescription extends StatelessWidget {
+  _ArticleDescription({
+    Key key,
+    this.title,
+    this.subtitle,
+    this.author,
+    this.publishDate,
+    this.readDuration,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final String author;
+  final String publishDate;
+  final String readDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '$title',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+              Text(
+                '$subtitle',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                '$author',
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                '$publishDate · $readDuration ★',
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomListItemTwo extends StatelessWidget {
+  CustomListItemTwo({
+    Key key,
+    this.thumbnail,
+    this.title,
+    this.subtitle,
+    this.author,
+    this.publishDate,
+    this.readDuration,
+  }) : super(key: key);
+
+  final Widget thumbnail;
+  final String title;
+  final String subtitle;
+  final String author;
+  final String publishDate;
+  final String readDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: SizedBox(
+        height: 100,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: thumbnail,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
+                child: _ArticleDescription(
+                  title: title,
+                  subtitle: subtitle,
+                  author: author,
+                  publishDate: publishDate,
+                  readDuration: readDuration,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomListItem extends StatelessWidget {
+  const CustomListItem({
+    this.thumbnail,
+    this.title,
+    this.user,
+    this.viewCount,
+  });
+
+  final Widget thumbnail;
+  final String title;
+  final String user;
+  final int viewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: thumbnail,
+          ),
+          Expanded(
+            flex: 3,
+            child: _VideoDescription(
+              title: title,
+              user: user,
+              viewCount: viewCount,
+            ),
+          ),
+          const Icon(
+            Icons.more_vert,
+            size: 16.0,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VideoDescription extends StatelessWidget {
+  const _VideoDescription({
+    Key key,
+    this.title,
+    this.user,
+    this.viewCount,
+  }) : super(key: key);
+
+  final String title;
+  final String user;
+  final int viewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+            ),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+          Text(
+            user,
+            style: const TextStyle(fontSize: 10.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
+          Text(
+            '$viewCount views',
+            style: const TextStyle(fontSize: 10.0),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -317,7 +674,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   // Return text section with title, name, date info
   Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-      child: Column(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         // Title+name, location, time+day
         children: <Widget>[
