@@ -11,17 +11,18 @@ import 'invitepage/inviteinfo.dart';
 
 void main() {
   // debugPaintSizeEnabled = true;
-  runApp(ChangeNotifierProvider(
-      create: (context) => InvitePageModel(),
-      child: Consumer<InvitePageModel>(builder: (context, model, child) {
-        return MaterialApp(
-            title: 'NU Scheduling',
-            initialRoute: "/invitepage",
-            routes: {
-              "/": (BuildContext context) => MyApp(),
-              "/invitepage": (BuildContext context) => InvitePage(),
-            });
-      })));
+  runApp(
+      ChangeNotifierProvider(
+        create: (context) => InvitePageModel(),
+        child: Consumer<InvitePageModel>(builder: (context, model, child) {
+          return MaterialApp(
+              title: 'NU Scheduling',
+              initialRoute: "/invitepage",
+              routes: {
+                "/": (BuildContext context) => MyApp(),
+                "/invitepage": (BuildContext context) => InvitePage(),
+              });
+        })));
 }
 
 class MyApp extends StatelessWidget {
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
 
     // Return text section with title, name, date info
     Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-        child: Column(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           // Title+name, location, time+day
           children: <Widget>[
@@ -91,8 +92,7 @@ class MyApp extends StatelessWidget {
         ));
 
     // Returns a meeting card
-    Widget _buildCard(
-        BuildContext context, InviteInfo invite) {
+    Widget _buildCard(BuildContext context, InviteInfo invite) {
       String title = invite.title;
       String name = invite.name;
       String loc = invite.location;
@@ -140,7 +140,7 @@ class MyApp extends StatelessWidget {
           ? new Positioned(
               right: 11,
               top: 11,
-               child: new Container(
+              child: new Container(
                 padding: EdgeInsets.all(2),
                 decoration: new BoxDecoration(
                   color: Colors.red,

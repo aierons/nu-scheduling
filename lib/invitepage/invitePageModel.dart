@@ -39,4 +39,6 @@ class InvitePageModel extends ChangeNotifier {
     print("Joined ${invite.getName}'s meeting");
     notifyListeners();
   }
+
+
 }

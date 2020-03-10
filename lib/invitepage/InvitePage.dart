@@ -76,7 +76,7 @@ class _InvitePageState extends State<InvitePage> {
         ],
       ));
 
-  // Makes popup text entry
+  // Popup confirmation dialog for accepting and rejecting invites
   _createAlertDialog(BuildContext context, bool accepted, InviteInfo invite) {
     String message = "Decline Jeff's meeting?";
 
@@ -129,7 +129,7 @@ class _InvitePageState extends State<InvitePage> {
             });
   }
 
-  // Build stack of accept / reject
+  // Build stack of accept / reject icons
   Widget _buildIconColumn(InviteInfo invite) => Container(
       padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
 //      color: Theme.of(context).accentColor,
