@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'draw.dart';
+import 'package:provider/provider.dart';
+import './invitepage/InvitePage.dart';
+import './invitepage/InvitePageModel.dart';
+import 'invitepage/inviteinfo.dart';
+import 'home_page.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
   // debugPaintSizeEnabled = true;
-  runApp(MaterialApp(
-    title: 'NuSchedule',
-    home: MyPageView(),
-  ));
+  // runApp(MaterialApp(
+  //   title: 'NuSchedule',
+  //   home: MyPageView(),
+  // ));
+  runApp(ChangeNotifierProvider(
+      create: (context) => InvitePageModel(),
+      child: Consumer<InvitePageModel>(builder: (context, model, child) {
+        return MaterialApp(
+            title: 'NU Scheduling',
+            //home: MyPageView(),
+            initialRoute: "/invitepage",
+            routes: {
+              "/": (BuildContext context) => MyPageView(),
+              "/invitepage": (BuildContext context) => InvitePage(),
+            });
+      })));
 }
 
 class MyPageView extends StatefulWidget {
@@ -316,7 +332,7 @@ class _MyPageViewState extends State<MyPageView> {
         body: PageView(
           controller: _pageController,
           children: [
-            homePage,
+            HomePage(),
             titleSetup,
             //locationSetup,
             dateTimeSetup,
@@ -324,183 +340,6 @@ class _MyPageViewState extends State<MyPageView> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    // checkbox
-    Widget infoSection = ListView(
-      children: const <Widget>[
-        Card(child: ListTile(title: Text('One-line ListTile'))),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(),
-            title: Text('One-line with leading widget'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('One-line with trailing widget'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(),
-            title: Text('One-line with both widgets'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('One-line dense ListTile'),
-            dense: true,
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(size: 56.0),
-            title: Text('Two-line ListTile'),
-            subtitle: Text('Here is a second line'),
-            trailing: Icon(Icons.more_vert),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            leading: FlutterLogo(size: 72.0),
-            title: Text('Three-line ListTile'),
-            subtitle:
-                Text('A sufficiently long subtitle warrants three lines.'),
-            trailing: Icon(Icons.more_vert),
-            isThreeLine: true,
-          ),
-        ),
-      ],
-    );
-
-    Color color = Theme.of(context).primaryColor;
-
-    Widget buttonSection = Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildButtonColumn(color, Icons.call, 'CALL'),
-          _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-          _buildButtonColumn(color, Icons.share, 'SHARE'),
-        ],
-      ),
-    );
-
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        'random text label here to display stuff',
-        softWrap: true,
-      ),
-    );
-
-    return MaterialApp(
-      title: 'I5 Assignment',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('NuSchedule'),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Messages'),
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('Profile'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-            ],
-          ),
-        ),
-        body: ListView(
-          children: [
-            Card(
-              child: ListTile(
-                leading: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {},
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    padding: EdgeInsets.symmetric(vertical: 4.0),
-                    alignment: Alignment.center,
-                    child: CircleAvatar(),
-                  ),
-                ),
-                title: Text('title'),
-                subtitle: Text(''),
-                dense: false,
-              ),
-            ),
-            buttonSection,
-            textSection,
-            TextField(
-              autofocus: true,
-            ),
-            RaisedButton(
-              child: Text('Draw App'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Draw()),
-                );
-              },
-            ),
-            Tooltip(
-                message: 'tooltip',
-                child:
-                    new Text('tooltip, press the button above for drawing^')),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
