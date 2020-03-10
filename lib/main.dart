@@ -24,7 +24,7 @@ void main() {
             //home: MyPageView(),
             initialRoute: "/invitepage",
             routes: {
-              "/": (BuildContext context) => MyPageView(),
+              "/": (BuildContext context) => HomePage(),
               "/invitepage": (BuildContext context) => InvitePage(),
             });
       })));
