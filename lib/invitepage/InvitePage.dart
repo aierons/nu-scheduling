@@ -155,8 +155,7 @@ class _InvitePageState extends State<InvitePage> {
       ));
 
   // Returns a meeting card
-  Widget _buildCard(
-      BuildContext context, InviteInfo invite) {
+  Widget _buildCard(BuildContext context, InviteInfo invite) {
     String title = invite.title;
     String name = invite.name;
     String loc = invite.location;
