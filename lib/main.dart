@@ -6,28 +6,29 @@ import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
 import 'home_page.dart';
+import 'location_setup.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
 //debugPaintSizeEnabled = true;
-  runApp(MaterialApp(
-    title: 'NuSchedule',
-    home: MyPageView(),
-  ));
-  // runApp(ChangeNotifierProvider(
-  //     create: (context) => InvitePageModel(),
-  //     child: Consumer<InvitePageModel>(builder: (context, model, child) {
-  //       return MaterialApp(
-  //           title: 'NU Scheduling',
-  //           //home: MyPageView(),
-  //           initialRoute: "/invitepage",
-  //           routes: {
-  //             "/": (BuildContext context) => MyPageView(),
-  //             "/invitepage": (BuildContext context) => InvitePage(),
-  //           });
-  //     })));
+  // runApp(MaterialApp(
+  //   title: 'NuSchedule',
+  //   home: MyPageView(),
+  // ));
+  runApp(ChangeNotifierProvider(
+      create: (context) => InvitePageModel(),
+      child: Consumer<InvitePageModel>(builder: (context, model, child) {
+        return MaterialApp(
+            title: 'NU Scheduling',
+            //home: MyPageView(),
+            initialRoute: "/invitepage",
+            routes: {
+              "/": (BuildContext context) => MyPageView(),
+              "/invitepage": (BuildContext context) => InvitePage(),
+            });
+      })));
 }
 
 class MyPageView extends StatefulWidget {
@@ -109,58 +110,61 @@ class _MyPageViewState extends State<MyPageView> {
       ),
     );
 
-    Widget titleSetup = Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            child: FlatButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    0,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.arrow_left),
+    Widget titleSetup = Padding(
+      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      0,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_left),
+              ),
             ),
           ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Container(
-            child: FlatButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    2,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.arrow_right),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      2,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_right),
+              ),
             ),
           ),
-        ),
-        Center(
-          child: Container(
-            width: 300.0,
-            child: TextField(
-              controller: _textController,
-              onSubmitted: _onSubmitted,
-              decoration:
-                  new InputDecoration.collapsed(hintText: 'Title of Meeting'),
+          Center(
+            child: Container(
+              width: 300.0,
+              child: TextField(
+                controller: _textController,
+                onSubmitted: _onSubmitted,
+                decoration:
+                    new InputDecoration.collapsed(hintText: 'Title of Meeting'),
+              ),
+              // ),
             ),
-            // ),
           ),
-        ),
-        // new Container(
-        //   child: Center(child: BasicDateTimeField()),
-        // ),
-      ],
+          // new Container(
+          //   child: Center(child: BasicDateTimeField()),
+          // ),
+        ],
+      ),
     );
 
     Widget dateTimeSetup = Stack(children: <Widget>[
@@ -274,73 +278,71 @@ class _MyPageViewState extends State<MyPageView> {
       ],
     );
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('NU Schedule')),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+    return Scaffold(
+      //appBar: AppBar(title: Text('NU Schedule')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Messages'),
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('Profile'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: Container(height: 50.0),
-          color: Colors.blueGrey,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (_pageController.hasClients) {
-              _pageController.animateToPage(
-                1,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
-              );
-            }
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => titleSetup));
-          },
-          child: Icon(Icons.add),
-        ),
-        //visible: true, //(_pageController.page == 0 ? true : false),
-
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: PageView(
-          controller: _pageController,
-          children: [
-            homePage,
-            titleSetup,
-            //locationSetup,
-            dateTimeSetup,
-            memberSetup,
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Messages'),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+            ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(height: 50.0),
+        color: Colors.blueGrey,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_pageController.hasClients) {
+            _pageController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => titleSetup));
+        },
+        child: Icon(Icons.add),
+      ),
+      //visible: true, //(_pageController.page == 0 ? true : false),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: PageView(
+        controller: _pageController,
+        children: [
+          HomePage(),
+          titleSetup,
+          LocationSetup(),
+          dateTimeSetup,
+          memberSetup,
+        ],
       ),
     );
   }
