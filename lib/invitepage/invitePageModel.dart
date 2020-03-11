@@ -4,7 +4,7 @@ import './inviteinfo.dart';
 
 class InvitePageModel extends ChangeNotifier {
   final List<InviteInfo> _invites = [
-    new InviteInfo("Snell Study", "Jeff", "Snell Library")
+    new InviteInfo("Snell Study", "Jeff", "Snell Library", "")
   ];
 
   final List<InviteInfo> _accepted = [];

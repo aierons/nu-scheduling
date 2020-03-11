@@ -1,202 +1,544 @@
 import 'package:flutter/material.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'draw.dart';
-import 'http.dart';
 import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
+import 'home_page.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
   // debugPaintSizeEnabled = true;
-  runApp(
-      ChangeNotifierProvider(
-        create: (context) => InvitePageModel(),
-        child: Consumer<InvitePageModel>(builder: (context, model, child) {
-          return MaterialApp(
-              title: 'NU Scheduling',
-              initialRoute: "/invitepage",
-              routes: {
-                "/": (BuildContext context) => MyApp(),
-                "/invitepage": (BuildContext context) => InvitePage(),
-              });
-        })));
+  // runApp(MaterialApp(
+  //   title: 'NuSchedule',
+  //   home: MyPageView(),
+  // ));
+  runApp(ChangeNotifierProvider(
+      create: (context) => InvitePageModel(),
+      child: Consumer<InvitePageModel>(builder: (context, model, child) {
+        return MaterialApp(
+            title: 'NU Scheduling',
+            //home: MyPageView(),
+            initialRoute: "/",
+            routes: {
+              "/": (BuildContext context) => MyPageView(),
+              "/invitepage": (BuildContext context) => InvitePage(),
+            });
+      })));
 }
 
-class MyApp extends StatelessWidget {
+class MyPageView extends StatefulWidget {
+  MyPageView({Key key}) : super(key: key);
+
+  _MyPageViewState createState() => _MyPageViewState();
+}
+
+class _MyPageViewState extends State<MyPageView> {
+  final _pageController = PageController(
+    initialPage: 0,
+  );
+
+  final _textController = new TextEditingController();
+
+  String _displayValue = "";
+  InviteInfo _blankInfo = new InviteInfo("","","","");
+
+  _onSubmitted(String value) {
+    setState(() => _displayValue = value);
+  }
+
+  final format = DateFormat("yyyy-MM-dd HH:mm");
+
+  DateTime selectedDate = DateTime.now();
+
+  Future<Null> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  // Widget createMeeting() {
+  //   if (_pageController.page == 0) {
+  //     return FloatingActionButton(
+  //       onPressed: () {
+  //         if (_pageController.hasClients) {
+  //           _pageController.animateToPage(
+  //             1,
+  //             duration: const Duration(milliseconds: 400),
+  //             curve: Curves.easeInOut,
+  //           );
+  //         }
+  //         // Navigator.push(
+  //         //     context,
+  //         //     MaterialPageRoute(
+  //         //         builder: (BuildContext context) => titleSetup));
+  //       },
+  //       child: Icon(Icons.add),
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
-    InvitePageModel invModel = Provider.of<InvitePageModel>(context);
-    int invCt = invModel.numInv;
-    // Border for cards
-    BoxDecoration _cardDecoration() {
-      return BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1),
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-          color: Colors.white,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey,
-                spreadRadius: 0.6,
-                blurRadius: 5,
-                // LTRB
-                offset: Offset(
-                  0, // move 10 right
-                  3, // move 10 down
-                ))
-          ]);
-    }
+    InvitePageModel _invModel = Provider.of<InvitePageModel>(context);
 
-    // Return text section with title, name, date info
-    Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // Title+name, location, time+day
+    Widget homePage = Container(
+      child: Center(
+        child: ListView(
           children: <Widget>[
-            // Title+name
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
-                child: Row(children: <Widget>[
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+            Card(
+              child: ListTile(
+                //leading: FlutterLogo(size: 56.0),
+                title: Text(_textController.text),
+                subtitle: Text('location, date, time'),
+                trailing: Icon(Icons.more_vert),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    Widget titleSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(Icons.arrow_left, size: 50)),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(Icons.arrow_right, size: 50)),
+                ),
+              ),
+            ),
+            Center(
+              child: Container(
+                child: Center(
+                  child: TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.person),
+                      hintText: "What's the title of your meeting?",
+                      labelText: 'Meeting Title',
+                    ),
+                    onSubmitted: (title) { _blankInfo.setTitle(title); },
                   ),
-                  SizedBox(width: 8),
-                  Text(name,
-                      style: TextStyle(color: Colors.grey[500], fontSize: 18))
-                ])),
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-                child: Row(children: <Widget>[
-                  Icon(Icons.location_on, color: Theme.of(context).accentColor),
-                  Text(
-                    loc,
-                  )
-                ])),
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-                child: Row(children: <Widget>[
-                  Icon(Icons.access_time, color: Theme.of(context).accentColor),
-                  Text(
-                    "2pm - 3pm",
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "M",
-                  )
-                ]))
+                ),
+              ),
+            ),
+            // new Container(
+            //   child: Center(child: BasicDateTimeField()),
+            // ),
           ],
         ));
 
-    // Returns a meeting card
-    Widget _buildCard(BuildContext context, InviteInfo invite) {
-      String title = invite.title;
-      String name = invite.name;
-      String loc = invite.location;
-      String img = loc == "Snell Library" ? "snell" : "curry";
-      return Container(
-        padding: const EdgeInsets.all(0),
-        margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        child: Row(
-          // Card info, picture
+    Widget dateTimeSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(children: <Widget>[
+          Center(
+            child: Text('Select date and time'),
+          ),
+          Center(
+            child: DateTimeField(
+              format: format,
+              onShowPicker: (context, currentValue) async {
+                final date = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1900),
+                    initialDate: currentValue ?? DateTime.now(),
+                    lastDate: DateTime(2100));
+                if (date != null) {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime:
+                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                  );
+
+                  // Add date to blank InviteInfo
+                  _blankInfo.setDate(DateTimeField.combine(date, time).toString());
+                  _blankInfo.setLoc("Curry");
+                  return DateTimeField.combine(date, time);
+                } else {
+                  return currentValue;
+                }
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_left),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      3,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_right),
+              ),
+            ),
+          ),
+        ]));
+
+    Widget memberSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(
           children: <Widget>[
-            // Card info side
-            _buildInfoSection(title, name, loc),
-            ClipRRect(
-                child: Image.asset('images/$img.jpg',
-                    width: 125, height: 150, fit: BoxFit.cover),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8)))
-          ],
-        ),
-        decoration: _cardDecoration(),
-      );
-    }
-
-    final acceptedMeetings = <Widget>[];
-    invModel.accepted.forEach((i) {
-      var card = _buildCard(context, i);
-      acceptedMeetings.add(card);
-    });
-
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        'random text label here to display stuff',
-        softWrap: true,
-      ),
-    );
-
-    Widget mailButton = new Stack(children: <Widget>[
-      IconButton(
-          padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
-          icon: Icon(Icons.mail, size: 30),
-          onPressed: () => Navigator.of(context).pushNamed("/invitepage")),
-      invCt > 0
-          ? new Positioned(
-              right: 11,
-              top: 11,
-              child: new Container(
-                padding: EdgeInsets.all(2),
-                decoration: new BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(6),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Icon(Icons.arrow_left),
                 ),
-                constraints: BoxConstraints(
-                  minWidth: 20,
-                  minHeight: 20,
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: RaisedButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _blankInfo.setName("You");
+                      _invModel.accept(_blankInfo);
+                      _blankInfo = new InviteInfo("","","","");
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Icon(Icons.check),
                 ),
-                child: Text(
-                  '$invCt',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+              ),
+            ),
+            Center(
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Invite people here!',
+                  labelText: 'Name *',
                 ),
               ),
             )
-          : new Container()
-    ]);
+          ],
+        ));
 
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[mailButton],
-        centerTitle: true,
-        title: Text(
-          "meetNEU",
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        elevation: 10,
+      bottomNavigationBar: BottomAppBar(
+        child: Container(height: 50.0),
+        color: Colors.blueGrey,
       ),
-      body: ListView(children: acceptedMeetings),
-      backgroundColor: Colors.white70,
-      // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_pageController.hasClients) {
+            _pageController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => titleSetup));
+        },
+        child: Icon(Icons.add),
+      ),
+      //visible: true, //(_pageController.page == 0 ? true : false),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: PageView(
+        controller: _pageController,
+        children: [
+          HomePage(),
+          titleSetup,
+          //locationSetup,
+          dateTimeSetup,
+          memberSetup,
+        ],
+      ),
     );
   }
+}
 
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
+class _ArticleDescription extends StatelessWidget {
+  _ArticleDescription({
+    Key key,
+    this.title,
+    this.subtitle,
+    this.author,
+    this.publishDate,
+    this.readDuration,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final String author;
+  final String publishDate;
+  final String readDuration;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '$title',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+              Text(
+                '$subtitle',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                '$author',
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                '$publishDate · $readDuration ★',
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class CustomListItemTwo extends StatelessWidget {
+  CustomListItemTwo({
+    Key key,
+    this.thumbnail,
+    this.title,
+    this.subtitle,
+    this.author,
+    this.publishDate,
+    this.readDuration,
+  }) : super(key: key);
+
+  final Widget thumbnail;
+  final String title;
+  final String subtitle;
+  final String author;
+  final String publishDate;
+  final String readDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: SizedBox(
+        height: 100,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: thumbnail,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
+                child: _ArticleDescription(
+                  title: title,
+                  subtitle: subtitle,
+                  author: author,
+                  publishDate: publishDate,
+                  readDuration: readDuration,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomListItem extends StatelessWidget {
+  const CustomListItem({
+    this.thumbnail,
+    this.title,
+    this.user,
+    this.viewCount,
+  });
+
+  final Widget thumbnail;
+  final String title;
+  final String user;
+  final int viewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: thumbnail,
+          ),
+          Expanded(
+            flex: 3,
+            child: _VideoDescription(
+              title: title,
+              user: user,
+              viewCount: viewCount,
+            ),
+          ),
+          const Icon(
+            Icons.more_vert,
+            size: 16.0,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _VideoDescription extends StatelessWidget {
+  const _VideoDescription({
+    Key key,
+    this.title,
+    this.user,
+    this.viewCount,
+  }) : super(key: key);
+
+  final String title;
+  final String user;
+  final int viewCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+            ),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+          Text(
+            user,
+            style: const TextStyle(fontSize: 10.0),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
+          Text(
+            '$viewCount views',
+            style: const TextStyle(fontSize: 10.0),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -254,177 +596,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           },
         )
       ],
-    );
-  }
-}
-
-/// panel implementation with GUI components
-class MyPanel extends StatelessWidget {
-  static const String _title = 'Panel';
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _title,
-      home: Scaffold(
-        appBar: AppBar(title: const Text(_title)),
-        body: MyStatefulWidget(),
-      ),
-    );
-  }
-}
-
-// stores ExpansionPanel state information
-class Item {
-  Item({
-    this.expandedValue,
-    this.headerValue,
-    this.isExpanded = false,
-  });
-
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List.generate(numberOfItems, (int index) {
-    return Item(
-      headerValue: 'Panel $index',
-      expandedValue: 'This is item number $index',
-    );
-  });
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  List<Item> _data = generateItems(8);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        child: _buildPanel(),
-      ),
-    );
-  }
-
-  // Border for cards
-  BoxDecoration _cardDecoration() {
-    return BoxDecoration(
-        border: Border.all(color: Colors.white, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        color: Colors.white,
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 0.6,
-              blurRadius: 5,
-              // LTRB
-              offset: Offset(
-                0, // move 10 right
-                3, // move 10 down
-              ))
-        ]);
-  }
-
-  // Return text section with title, name, date info
-  Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        // Title+name, location, time+day
-        children: <Widget>[
-          // Title+name
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
-              child: Row(children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-                ),
-                SizedBox(width: 8),
-                Text(name,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 18))
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.location_on, color: Theme.of(context).accentColor),
-                Text(
-                  loc,
-                )
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.access_time, color: Theme.of(context).accentColor),
-                Text(
-                  "2pm - 3pm",
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "M",
-                )
-              ]))
-        ],
-      ));
-
-  // Returns a meeting card
-  Widget _buildCard(
-      BuildContext context, String title, String name, String loc) {
-    String img = loc == "Snell Library" ? "snell" : "curry";
-    return Container(
-      padding: const EdgeInsets.all(0),
-      margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-      child: Row(
-        // Card info, picture
-        children: <Widget>[
-          // Card info side
-          _buildInfoSection(title, name, loc),
-          ClipRRect(
-              child: Image.asset('images/$img.jpg',
-                  width: 125, height: 150, fit: BoxFit.cover),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8)))
-        ],
-      ),
-      decoration: _cardDecoration(),
-    );
-  }
-
-  Widget _buildPanel() {
-    return ExpansionPanelList(
-      expansionCallback: (int index, bool isExpanded) {
-        setState(() {
-          _data[index].isExpanded = !isExpanded;
-        });
-      },
-      children: _data.map<ExpansionPanel>((Item item) {
-        return ExpansionPanel(
-          headerBuilder: (BuildContext context, bool isExpanded) {
-            return ListTile(
-              title: Text(item.headerValue),
-            );
-          },
-          body: ListTile(
-              title: Text(item.expandedValue),
-              subtitle: Text('To delete this panel, tap the trash can icon'),
-              trailing: Icon(Icons.delete),
-              onTap: () {
-                setState(() {
-                  _data.removeWhere((currentItem) => item == currentItem);
-                });
-              }),
-          isExpanded: item.isExpanded,
-        );
-      }).toList(),
     );
   }
 }
