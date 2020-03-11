@@ -50,6 +50,13 @@ class _MyPageViewState extends State<MyPageView> {
     setState(() => _displayValue = value);
   }
 
+  List<ListItem<String>> list = [
+    ListItem<String>('Snell Library'),
+    ListItem<String>('Curry Student Center'),
+    ListItem<String>('Ryder Hall'),
+    ListItem<String>('Richards Hall'),
+  ];
+
   final format = DateFormat("yyyy-MM-dd HH:mm");
 
   DateTime selectedDate = DateTime.now();
@@ -92,23 +99,6 @@ class _MyPageViewState extends State<MyPageView> {
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
-
-    Widget homePage = Container(
-      child: Center(
-        child: ListView(
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                //leading: FlutterLogo(size: 56.0),
-                title: Text(_textController.text),
-                subtitle: Text('location, date, time'),
-                trailing: Icon(Icons.more_vert),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
 
     Widget titleSetup = Padding(
       padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
@@ -229,6 +219,82 @@ class _MyPageViewState extends State<MyPageView> {
       ),
     ]);
 
+    Widget _getListItemTile(BuildContext context, int index) {
+      return GestureDetector(
+        onTap: () {
+          var itemSelected =
+              list.singleWhere((item) => item.isSelected, orElse: () => null);
+          // if every single item is not selected, then allow for selection
+          if (list.every((item) => !item.isSelected)) {
+            setState(() {
+              // allow selection
+              list[index].isSelected = !list[index].isSelected;
+            });
+          } else if (itemSelected != null) {
+            setState(() {
+              itemSelected.isSelected = false;
+              list[index].isSelected = !list[index].isSelected;
+            });
+          }
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 4),
+          color: list[index].isSelected ? Colors.red[100] : Colors.white,
+          child: ListTile(
+            title: Text(list[index].data),
+          ),
+        ),
+      );
+    }
+
+    Widget locationSetup = Padding(
+      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      2,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_left),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      4,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_right),
+              ),
+            ),
+          ),
+          Center(
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: _getListItemTile,
+            ),
+          ),
+        ],
+      ),
+    );
+
     Widget memberSetup = Stack(
       children: <Widget>[
         Align(
@@ -238,7 +304,7 @@ class _MyPageViewState extends State<MyPageView> {
               onPressed: () {
                 if (_pageController.hasClients) {
                   _pageController.animateToPage(
-                    2,
+                    3,
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
                   );
@@ -339,7 +405,7 @@ class _MyPageViewState extends State<MyPageView> {
         children: [
           HomePage(),
           titleSetup,
-          LocationSetup(),
+          locationSetup,
           dateTimeSetup,
           memberSetup,
         ],

@@ -28,9 +28,18 @@ class _LocationSetup extends State<LocationSetup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: _getListItemTile,
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: _getListItemTile,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
