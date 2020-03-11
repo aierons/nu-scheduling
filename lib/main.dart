@@ -6,12 +6,13 @@ import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
 import 'home_page.dart';
+import 'location_setup.dart';
 
 // Uncomment lines 7 and 10 to view the visual layout at runtime.
 // import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
-  // debugPaintSizeEnabled = true;
+//debugPaintSizeEnabled = true;
   // runApp(MaterialApp(
   //   title: 'NuSchedule',
   //   home: MyPageView(),
@@ -44,11 +45,18 @@ class _MyPageViewState extends State<MyPageView> {
   final _textController = new TextEditingController();
 
   String _displayValue = "";
-  InviteInfo _blankInfo = new InviteInfo("","","","");
+  InviteInfo _blankInfo = new InviteInfo("", "", "", "");
 
   _onSubmitted(String value) {
     setState(() => _displayValue = value);
   }
+
+  List<ListItem<String>> list = [
+    ListItem<String>('Snell Library'),
+    ListItem<String>('Curry Student Center'),
+    ListItem<String>('Ryder Hall'),
+    ListItem<String>('Richards Hall'),
+  ];
 
   final format = DateFormat("yyyy-MM-dd HH:mm");
 
@@ -93,23 +101,6 @@ class _MyPageViewState extends State<MyPageView> {
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
     InvitePageModel _invModel = Provider.of<InvitePageModel>(context);
-
-    Widget homePage = Container(
-      child: Center(
-        child: ListView(
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                //leading: FlutterLogo(size: 56.0),
-                title: Text(_textController.text),
-                subtitle: Text('location, date, time'),
-                trailing: Icon(Icons.more_vert),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
 
     Widget titleSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
@@ -163,16 +154,98 @@ class _MyPageViewState extends State<MyPageView> {
                       hintText: "What's the title of your meeting?",
                       labelText: 'Meeting Title',
                     ),
-                    onSubmitted: (title) { _blankInfo.setTitle(title); },
+                    onSubmitted: (title) {
+                      _blankInfo.setTitle(title);
+                    },
                   ),
                 ),
               ),
             ),
-            // new Container(
-            //   child: Center(child: BasicDateTimeField()),
-            // ),
           ],
         ));
+
+    Widget _getListItemTile(BuildContext context, int index) {
+      return GestureDetector(
+        onTap: () {
+          var itemSelected =
+              list.singleWhere((item) => item.isSelected, orElse: () => null);
+          // if every single item is not selected, then allow for selection
+          if (list.every((item) => !item.isSelected)) {
+            setState(() {
+              // allow selection
+              list[index].isSelected = !list[index].isSelected;
+            });
+          } else if (itemSelected != null) {
+            setState(() {
+              itemSelected.isSelected = false;
+              list[index].isSelected = !list[index].isSelected;
+            });
+          }
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 4),
+          color: list[index].isSelected ? Colors.red[100] : Colors.white,
+          child: ListTile(
+            title: Text(list[index].data),
+          ),
+        ),
+      );
+    }
+
+    Widget locationSetup = Padding(
+      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Icon(Icons.arrow_left, size: 50)),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      3,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Icon(Icons.arrow_right, size: 50)),
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: _getListItemTile,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     Widget dateTimeSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
@@ -197,7 +270,8 @@ class _MyPageViewState extends State<MyPageView> {
                   );
 
                   // Add date to blank InviteInfo
-                  _blankInfo.setDate(DateTimeField.combine(date, time).toString());
+                  _blankInfo
+                      .setDate(DateTimeField.combine(date, time).toString());
                   _blankInfo.setLoc("Curry");
                   return DateTimeField.combine(date, time);
                 } else {
@@ -213,13 +287,15 @@ class _MyPageViewState extends State<MyPageView> {
                 onPressed: () {
                   if (_pageController.hasClients) {
                     _pageController.animateToPage(
-                      1,
+                      2,
                       duration: const Duration(milliseconds: 400),
                       curve: Curves.easeInOut,
                     );
                   }
                 },
-                child: Icon(Icons.arrow_left),
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Icon(Icons.arrow_left, size: 50)),
               ),
             ),
           ),
@@ -230,13 +306,15 @@ class _MyPageViewState extends State<MyPageView> {
                 onPressed: () {
                   if (_pageController.hasClients) {
                     _pageController.animateToPage(
-                      3,
+                      4,
                       duration: const Duration(milliseconds: 400),
                       curve: Curves.easeInOut,
                     );
                   }
                 },
-                child: Icon(Icons.arrow_right),
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Icon(Icons.arrow_right, size: 50)),
               ),
             ),
           ),
@@ -253,13 +331,15 @@ class _MyPageViewState extends State<MyPageView> {
                   onPressed: () {
                     if (_pageController.hasClients) {
                       _pageController.animateToPage(
-                        2,
+                        3,
                         duration: const Duration(milliseconds: 400),
                         curve: Curves.easeInOut,
                       );
                     }
                   },
-                  child: Icon(Icons.arrow_left),
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(Icons.arrow_left, size: 50)),
                 ),
               ),
             ),
@@ -271,7 +351,7 @@ class _MyPageViewState extends State<MyPageView> {
                     if (_pageController.hasClients) {
                       _blankInfo.setName("You");
                       _invModel.accept(_blankInfo);
-                      _blankInfo = new InviteInfo("","","","");
+                      _blankInfo = new InviteInfo("", "", "", "");
                       _pageController.animateToPage(
                         0,
                         duration: const Duration(milliseconds: 400),
@@ -279,7 +359,9 @@ class _MyPageViewState extends State<MyPageView> {
                       );
                     }
                   },
-                  child: Icon(Icons.check),
+                  child: Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Icon(Icons.check)),
                 ),
               ),
             ),
@@ -297,6 +379,38 @@ class _MyPageViewState extends State<MyPageView> {
         ));
 
     return Scaffold(
+      //appBar: AppBar(title: Text('NU Schedule')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Messages'),
+            ),
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Container(height: 50.0),
         color: Colors.blueGrey,
@@ -325,7 +439,7 @@ class _MyPageViewState extends State<MyPageView> {
         children: [
           HomePage(),
           titleSetup,
-          //locationSetup,
+          locationSetup,
           dateTimeSetup,
           memberSetup,
         ],

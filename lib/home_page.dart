@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
 
     // Return text section with title, name, date info
     Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-        child: Column(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           // Title+name, location, time+day
           children: <Widget>[
@@ -117,28 +117,28 @@ class HomePage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pushNamed("/invitepage")),
       invCt > 0
           ? new Positioned(
-        right: 11,
-        top: 11,
-        child: new Container(
-          padding: EdgeInsets.all(2),
-          decoration: new BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          constraints: BoxConstraints(
-            minWidth: 20,
-            minHeight: 20,
-          ),
-          child: Text(
-            '$invCt',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      )
+              right: 11,
+              top: 11,
+              child: new Container(
+                padding: EdgeInsets.all(2),
+                decoration: new BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                constraints: BoxConstraints(
+                  minWidth: 20,
+                  minHeight: 20,
+                ),
+                child: Text(
+                  '$invCt',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
           : new Container()
     ]);
 
@@ -179,4 +179,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
