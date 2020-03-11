@@ -24,7 +24,7 @@ void main() {
             //home: MyPageView(),
             initialRoute: "/invitepage",
             routes: {
-              "/": (BuildContext context) => HomePage(),
+              "/": (BuildContext context) => MyPageView(),
               "/invitepage": (BuildContext context) => InvitePage(),
             });
       })));
@@ -109,236 +109,217 @@ class _MyPageViewState extends State<MyPageView> {
       ),
     );
 
-    Widget titleSetup = Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            child: FlatButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    0,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.arrow_left),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Container(
-            child: FlatButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    2,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.arrow_right),
-            ),
-          ),
-        ),
-        Center(
-          child: Container(
-            child: Center(
-              child: TextField(
-                controller: _textController,
-                onSubmitted: _onSubmitted,
+    Widget titleSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(Icons.arrow_left, size: 50)),
+                ),
               ),
             ),
-          ),
-        ),
-        // new Container(
-        //   child: Center(child: BasicDateTimeField()),
-        // ),
-      ],
-    );
-
-    Widget dateTimeSetup = Stack(children: <Widget>[
-      Center(
-        child: Text('Select date and time'),
-      ),
-      Center(
-        child: DateTimeField(
-          format: format,
-          onShowPicker: (context, currentValue) async {
-            final date = await showDatePicker(
-                context: context,
-                firstDate: DateTime(1900),
-                initialDate: currentValue ?? DateTime.now(),
-                lastDate: DateTime(2100));
-            if (date != null) {
-              final time = await showTimePicker(
-                context: context,
-                initialTime:
-                    TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              );
-              return DateTimeField.combine(date, time);
-            } else {
-              return currentValue;
-            }
-          },
-        ),
-      ),
-      Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-          child: FlatButton(
-            onPressed: () {
-              if (_pageController.hasClients) {
-                _pageController.animateToPage(
-                  1,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                );
-              }
-            },
-            child: Icon(Icons.arrow_left),
-          ),
-        ),
-      ),
-      Align(
-        alignment: Alignment.topRight,
-        child: Container(
-          child: FlatButton(
-            onPressed: () {
-              if (_pageController.hasClients) {
-                _pageController.animateToPage(
-                  3,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                );
-              }
-            },
-            child: Icon(Icons.arrow_right),
-          ),
-        ),
-      ),
-    ]);
-
-    Widget memberSetup = Stack(
-      children: <Widget>[
-        Align(
-          alignment: Alignment.topLeft,
-          child: Container(
-            child: FlatButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    2,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.arrow_left),
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: Container(
-            child: RaisedButton(
-              onPressed: () {
-                if (_pageController.hasClients) {
-                  _pageController.animateToPage(
-                    0,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Icon(Icons.check),
-            ),
-          ),
-        ),
-        Center(
-          child: TextFormField(
-            controller: _textController,
-            decoration: const InputDecoration(
-              icon: Icon(Icons.person),
-              hintText: 'Invite people here!',
-              labelText: 'Name *',
-            ),
-          ),
-        )
-      ],
-    );
-
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('NU Schedule')),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Icon(Icons.arrow_right, size: 50)),
                 ),
-                child: Text(
-                  'Drawer Header',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+              ),
+            ),
+            Center(
+              child: Container(
+                child: Center(
+                  child: TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.person),
+                      hintText: "What's the title of your meeting?",
+                      labelText: 'Meeting Title',
+                    ),
+                    onSubmitted: _onSubmitted,
                   ),
                 ),
               ),
-              ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Messages'),
-              ),
-              ListTile(
-                leading: Icon(Icons.account_circle),
-                title: Text('Profile'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: Container(height: 50.0),
-          color: Colors.blueGrey,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            if (_pageController.hasClients) {
-              _pageController.animateToPage(
-                1,
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
-              );
-            }
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (BuildContext context) => titleSetup));
-          },
-          child: Icon(Icons.add),
-        ),
-        //visible: true, //(_pageController.page == 0 ? true : false),
-
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: PageView(
-          controller: _pageController,
-          children: [
-            HomePage(),
-            titleSetup,
-            //locationSetup,
-            dateTimeSetup,
-            memberSetup,
+            ),
+            // new Container(
+            //   child: Center(child: BasicDateTimeField()),
+            // ),
           ],
-        ),
+        ));
+
+    Widget dateTimeSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(children: <Widget>[
+          Center(
+            child: Text('Select date and time'),
+          ),
+          Center(
+            child: DateTimeField(
+              format: format,
+              onShowPicker: (context, currentValue) async {
+                final date = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1900),
+                    initialDate: currentValue ?? DateTime.now(),
+                    lastDate: DateTime(2100));
+                if (date != null) {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime:
+                        TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                  );
+                  return DateTimeField.combine(date, time);
+                } else {
+                  return currentValue;
+                }
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_left),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      3,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Icon(Icons.arrow_right),
+              ),
+            ),
+          ),
+        ]));
+
+    Widget memberSetup = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                child: FlatButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        2,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Icon(Icons.arrow_left),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: RaisedButton(
+                  onPressed: () {
+                    if (_pageController.hasClients) {
+                      _pageController.animateToPage(
+                        0,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Icon(Icons.check),
+                ),
+              ),
+            ),
+            Center(
+              child: TextFormField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Invite people here!',
+                  labelText: 'Name *',
+                ),
+              ),
+            )
+          ],
+        ));
+
+    return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        child: Container(height: 50.0),
+        color: Colors.blueGrey,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_pageController.hasClients) {
+            _pageController.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (BuildContext context) => titleSetup));
+        },
+        child: Icon(Icons.add),
+      ),
+      //visible: true, //(_pageController.page == 0 ? true : false),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: PageView(
+        controller: _pageController,
+        children: [
+          HomePage(),
+          titleSetup,
+          //locationSetup,
+          dateTimeSetup,
+          memberSetup,
+        ],
       ),
     );
   }
