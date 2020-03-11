@@ -22,7 +22,7 @@ void main() {
         return MaterialApp(
             title: 'NU Scheduling',
             //home: MyPageView(),
-            initialRoute: "/invitepage",
+            initialRoute: "/",
             routes: {
               "/": (BuildContext context) => MyPageView(),
               "/invitepage": (BuildContext context) => InvitePage(),
@@ -44,6 +44,7 @@ class _MyPageViewState extends State<MyPageView> {
   final _textController = new TextEditingController();
 
   String _displayValue = "";
+  InviteInfo _blankInfo = new InviteInfo("","","","");
 
   _onSubmitted(String value) {
     setState(() => _displayValue = value);
@@ -91,6 +92,7 @@ class _MyPageViewState extends State<MyPageView> {
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
+    InvitePageModel _invModel = Provider.of<InvitePageModel>(context);
 
     Widget homePage = Container(
       child: Center(
@@ -161,7 +163,7 @@ class _MyPageViewState extends State<MyPageView> {
                       hintText: "What's the title of your meeting?",
                       labelText: 'Meeting Title',
                     ),
-                    onSubmitted: _onSubmitted,
+                    onSubmitted: (title) { _blankInfo.setTitle(title); },
                   ),
                 ),
               ),
@@ -193,6 +195,10 @@ class _MyPageViewState extends State<MyPageView> {
                     initialTime:
                         TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                   );
+
+                  // Add date to blank InviteInfo
+                  _blankInfo.setDate(DateTimeField.combine(date, time).toString());
+                  _blankInfo.setLoc("Curry");
                   return DateTimeField.combine(date, time);
                 } else {
                   return currentValue;
@@ -263,6 +269,9 @@ class _MyPageViewState extends State<MyPageView> {
                 child: RaisedButton(
                   onPressed: () {
                     if (_pageController.hasClients) {
+                      _blankInfo.setName("You");
+                      _invModel.accept(_blankInfo);
+                      _blankInfo = new InviteInfo("","","","");
                       _pageController.animateToPage(
                         0,
                         duration: const Duration(milliseconds: 400),
