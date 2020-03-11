@@ -378,6 +378,96 @@ class _MyPageViewState extends State<MyPageView> {
           ],
         ));
 
+    Widget changeLocation = Padding(
+      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      3,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Icon(Icons.check)),
+              ),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+              child: ListView.builder(
+                itemCount: list.length,
+                itemBuilder: _getListItemTile,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    Widget changeDateTime = Padding(
+        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        child: Stack(children: <Widget>[
+          Center(
+            child: Text('Select date and time'),
+          ),
+          Center(
+            child: DateTimeField(
+              format: format,
+              onShowPicker: (context, currentValue) async {
+                final date = await showDatePicker(
+                    context: context,
+                    firstDate: DateTime(1900),
+                    initialDate: currentValue ?? DateTime.now(),
+                    lastDate: DateTime(2100));
+                if (date != null) {
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime:
+                        TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                  );
+
+                  // Add date to blank InviteInfo
+                  _blankInfo
+                      .setDate(DateTimeField.combine(date, time).toString());
+                  _blankInfo.setLoc("Curry");
+                  return DateTimeField.combine(date, time);
+                } else {
+                  return currentValue;
+                }
+              },
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              child: FlatButton(
+                onPressed: () {
+                  if (_pageController.hasClients) {
+                    _pageController.animateToPage(
+                      4,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
+                child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Icon(Icons.check)),
+              ),
+            ),
+          ),
+        ]));
+
     return Scaffold(
       //appBar: AppBar(title: Text('NU Schedule')),
       drawer: Drawer(
@@ -437,11 +527,13 @@ class _MyPageViewState extends State<MyPageView> {
       body: PageView(
         controller: _pageController,
         children: [
-          HomePage(),
+          HomePage(), // 0
           titleSetup,
           locationSetup,
           dateTimeSetup,
           memberSetup,
+          changeLocation,
+          changeDateTime // 6
         ],
       ),
     );
