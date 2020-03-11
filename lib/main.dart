@@ -31,6 +31,17 @@ void main() {
       })));
 }
 
+void goToPage(PageController controller, int page) {
+  if (controller.hasClients) {
+    controller.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+}
+
+
 class MyPageView extends StatefulWidget {
   MyPageView({Key key}) : super(key: key);
 
@@ -73,29 +84,6 @@ class _MyPageViewState extends State<MyPageView> {
         selectedDate = picked;
       });
   }
-
-  // Widget createMeeting() {
-  //   if (_pageController.page == 0) {
-  //     return FloatingActionButton(
-  //       onPressed: () {
-  //         if (_pageController.hasClients) {
-  //           _pageController.animateToPage(
-  //             1,
-  //             duration: const Duration(milliseconds: 400),
-  //             curve: Curves.easeInOut,
-  //           );
-  //         }
-  //         // Navigator.push(
-  //         //     context,
-  //         //     MaterialPageRoute(
-  //         //         builder: (BuildContext context) => titleSetup));
-  //       },
-  //       child: Icon(Icons.add),
-  //     );
-  //   } else {
-  //     return Container();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -437,7 +425,7 @@ class _MyPageViewState extends State<MyPageView> {
       body: PageView(
         controller: _pageController,
         children: [
-          HomePage(),
+          HomePage(_pageController),
           titleSetup,
           locationSetup,
           dateTimeSetup,
