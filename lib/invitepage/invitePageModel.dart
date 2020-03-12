@@ -40,5 +40,8 @@ class InvitePageModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void removeAccepted(InviteInfo invite) {
+    _accepted.remove(invite);
+    notifyListeners();
+  }
 }

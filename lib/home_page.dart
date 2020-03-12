@@ -4,32 +4,14 @@ import 'package:provider/provider.dart';
 import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
+import './location_setup.dart';
 
 class HomePage extends StatelessWidget {
-  final PageController controller;
-  HomePage(this.controller);
+  final PageController _pageController;
+  HomePage(this._pageController);
 
   @override
   Widget build(BuildContext context) {
-
-    Widget locationSetup = Padding(
-      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
-      child: Stack(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              child: FlatButton(
-                onPressed: () {},
-                child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Icon(Icons.check, size: 50)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
     Color color = Theme.of(context).primaryColor;
     InvitePageModel invModel = Provider.of<InvitePageModel>(context);
     int invCt = invModel.numInv;
@@ -93,7 +75,18 @@ class HomePage extends StatelessWidget {
           ],
         ));
 
-    // Popup confirmation dialog for accepting and rejecting invites
+    // Popup dialog that can change the location of a given meeting
+    _createLocationDialog(InviteInfo invite) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return LocationSetup(invite, invModel);
+          }
+      );
+    }
+
+    // Popup confirmation dialog for actions on cards
     _createAlertDialog(BuildContext context, bool accepted, InviteInfo invite) {
       return showDialog(
           barrierDismissible: true,
@@ -104,8 +97,7 @@ class HomePage extends StatelessWidget {
                 elevation: 5.0,
                 child: Text("Change Location"),
                 onPressed: () {
-//                  locationSetup();
-                  Navigator.pop(context);
+                  _createLocationDialog(invite);
                 },
               ),
               MaterialButton(
@@ -167,6 +159,7 @@ class HomePage extends StatelessWidget {
       acceptedMeetings.add(card);
     });
 
+    // Mail button w/notification badge for pending invites
     Widget mailButton = new Stack(children: <Widget>[
       IconButton(
           padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
