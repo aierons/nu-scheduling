@@ -39,4 +39,9 @@ class InvitePageModel extends ChangeNotifier {
     print("Joined ${invite.getName}'s meeting");
     notifyListeners();
   }
+
+  void removeAccepted(InviteInfo invite) {
+    _accepted.remove(invite);
+    notifyListeners();
+  }
 }

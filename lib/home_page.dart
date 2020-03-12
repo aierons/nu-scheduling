@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:layout/main.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
+import './location_setup.dart';
 
 class HomePage extends StatelessWidget {
+  final PageController _pageController;
+  HomePage(this._pageController);
+
   @override
   Widget build(BuildContext context) {
     Color color = Theme.of(context).primaryColor;
@@ -70,28 +75,80 @@ class HomePage extends StatelessWidget {
           ],
         ));
 
+    // Popup dialog that can change the location of a given meeting
+    _createLocationDialog(InviteInfo invite) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return LocationSetup(invite, invModel);
+          }
+      );
+    }
+
+    // Popup confirmation dialog for actions on cards
+    _createAlertDialog(BuildContext context, bool accepted, InviteInfo invite) {
+      return showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (context) {
+            return AlertDialog(actions: <Widget>[
+              MaterialButton(
+                elevation: 5.0,
+                child: Text("Change Location"),
+                onPressed: () {
+                  _createLocationDialog(invite);
+                },
+              ),
+              MaterialButton(
+                elevation: 5.0,
+                child: Text("Change Time"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              MaterialButton(
+                elevation: 5.0,
+                child: Text("Change Date"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ]);
+          });
+    }
+
     // Returns a meeting card
     Widget _buildCard(BuildContext context, InviteInfo invite) {
       String title = invite.title;
       String name = invite.name;
       String loc = invite.location;
       String img = loc == "Snell Library" ? "snell" : "curry";
+
       return Container(
         padding: const EdgeInsets.all(0),
         margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        child: Row(
-          // Card info, picture
-          children: <Widget>[
-            // Card info side
-            _buildInfoSection(title, name, loc),
-            ClipRRect(
-                child: Image.asset('images/$img.jpg',
-                    width: 125, height: 150, fit: BoxFit.cover),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(8),
-                    bottomRight: Radius.circular(8)))
-          ],
-        ),
+        child: Column(children: <Widget>[
+          Row(
+            // Card info, picture
+            children: <Widget>[
+              // Card info side
+              _buildInfoSection(title, name, loc),
+              ClipRRect(
+                  child: Image.asset('images/$img.jpg',
+                      width: 125, height: 150, fit: BoxFit.cover),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(8),
+                      bottomRight: Radius.circular(8)))
+            ],
+          ),
+          IconButton(
+            icon: Icon(Icons.keyboard_arrow_down),
+            onPressed: () {
+              _createAlertDialog(context, true, invite);
+            },
+          )
+        ]),
         decoration: _cardDecoration(),
       );
     }
@@ -102,14 +159,7 @@ class HomePage extends StatelessWidget {
       acceptedMeetings.add(card);
     });
 
-    Widget textSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Text(
-        'random text label here to display stuff',
-        softWrap: true,
-      ),
-    );
-
+    // Mail button w/notification badge for pending invites
     Widget mailButton = new Stack(children: <Widget>[
       IconButton(
           padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
@@ -155,27 +205,6 @@ class HomePage extends StatelessWidget {
       body: ListView(children: acceptedMeetings),
       backgroundColor: Colors.white70,
       // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
