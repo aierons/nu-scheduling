@@ -10,9 +10,11 @@ class InvitePageModel extends ChangeNotifier {
   final List<InviteInfo> _accepted = [];
 
   // Get the current invites
-  UnmodifiableListView<InviteInfo> get invites => UnmodifiableListView(_invites);
+  UnmodifiableListView<InviteInfo> get invites =>
+      UnmodifiableListView(_invites);
   int get numInv => _invites.length;
-  UnmodifiableListView<InviteInfo> get accepted => UnmodifiableListView(_accepted);
+  UnmodifiableListView<InviteInfo> get accepted =>
+      UnmodifiableListView(_accepted);
 
   // Add pending invitation
   void add(InviteInfo invite) {

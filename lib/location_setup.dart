@@ -38,7 +38,6 @@ class _LocationSetup extends State<LocationSetup> {
   _LocationSetup(InviteInfo invite, InvitePageModel model) {
     this._invite = invite;
     this._model = model;
-
   }
 
   @override
@@ -87,18 +86,18 @@ class _LocationSetup extends State<LocationSetup> {
         margin: EdgeInsets.symmetric(vertical: 4),
         color: list[index].isSelected ? Colors.red[100] : Colors.white,
         child: ListTile(
-          title: Text(list[index].data),
-          onTap: () {
-            // Add new invite with updated location.
-            // Mutation doesn't refresh widget tree.
-            var newLoc = list[index].data;
-            InviteInfo newInvite = new InviteInfo(_invite.title, _invite.getName, newLoc, _invite.getDate);
-            _model.removeAccepted(_invite);
-            _model.accept(newInvite);
-            Navigator.pop(context);
-            Navigator.pop(context);
-          }
-        ),
+            title: Text(list[index].data),
+            onTap: () {
+              // Add new invite with updated location.
+              // Mutation doesn't refresh widget tree.
+              var newLoc = list[index].data;
+              InviteInfo newInvite = new InviteInfo(
+                  _invite.title, _invite.getName, newLoc, _invite.getDate);
+              _model.removeAccepted(_invite);
+              _model.accept(newInvite);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            }),
       ),
     );
   }

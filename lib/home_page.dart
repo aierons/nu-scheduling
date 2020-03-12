@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:layout/main.dart';
 import 'package:provider/provider.dart';
-import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
 import './location_setup.dart';
@@ -82,8 +80,7 @@ class HomePage extends StatelessWidget {
           context: context,
           builder: (context) {
             return LocationSetup(invite, invModel);
-          }
-      );
+          });
     }
 
     // Popup confirmation dialog for actions on cards
