@@ -118,7 +118,21 @@ class HomePage extends StatelessWidget {
       String title = invite.title;
       String name = invite.name;
       String loc = invite.location;
-      String img = loc == "Snell Library" ? "snell" : "curry";
+      String locString;
+      switch(loc) {
+        case "Curry Student Center":
+          locString = "curry";
+          break;
+        case "Snell Library":
+          locString = "snell";
+          break;
+        case "Richards Hall":
+          locString = "richards";
+          break;
+        case "Ryder Hall":
+          locString = "ryder";
+          break;
+      }
 
       return Stack(
         children: <Widget>[
@@ -131,7 +145,7 @@ class HomePage extends StatelessWidget {
                 // Card info side
                 _buildInfoSection(title, name, loc),
                 ClipRRect(
-                    child: Image.asset('images/$img.jpg',
+                    child: Image.asset('images/$locString.jpg',
                         width: 125, height: 150, fit: BoxFit.cover),
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(8),
