@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
-import './location_setup.dart';
+import './location_change.dart';
 
 // App homepage where meetings are displayed
 class HomePage extends StatelessWidget {
@@ -138,7 +138,7 @@ class HomePage extends StatelessWidget {
         children: <Widget>[
           Container(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
             child: Row(
               // Card info, picture
               children: <Widget>[

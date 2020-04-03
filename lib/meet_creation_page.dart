@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
-import './location_setup.dart';
+import './location_change.dart';
 
 // Pages for creating a meeting
 class MeetCreationPage extends StatefulWidget {
