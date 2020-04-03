@@ -24,6 +24,7 @@ class _CreationState extends State<MeetCreationPage> {
   int _upToPage = -1;
   int _curPage = 0;
   InviteInfo _blankInfo = new InviteInfo("", "", "", "");
+  String _selectedLocation = "";
 
   List<ListItem<String>> list = [
     ListItem<String>('Snell Library'),
@@ -55,7 +56,7 @@ class _CreationState extends State<MeetCreationPage> {
             setState(() {
               itemSelected.isSelected = false;
               list[index].isSelected = !list[index].isSelected;
-//              _allowAdvance = true;
+              _selectedLocation = itemSelected.data;
               _upToPage = 1;
             });
           }
@@ -250,7 +251,7 @@ class _CreationState extends State<MeetCreationPage> {
                   // Add date to blank InviteInfo
                   _blankInfo
                       .setDate(DateTimeField.combine(date, time).toString());
-                  _blankInfo.setLoc("Curry");
+                  _blankInfo.setLoc(_selectedLocation);
                   setState(() {
                     _upToPage = _upToPage > 2 ? 3 : 2;
                   });
