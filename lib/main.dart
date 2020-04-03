@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import './invitepage/InvitePage.dart';
 import './invitepage/InvitePageModel.dart';
 import 'home_page.dart';
-import 'meetCreationPage.dart';
+import 'meet_creation_page.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
