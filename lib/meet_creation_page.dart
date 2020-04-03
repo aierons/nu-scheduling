@@ -40,13 +40,20 @@ class _CreationState extends State<MeetCreationPage> {
   Widget build(BuildContext context) {
     InvitePageModel _invModel = Provider.of<InvitePageModel>(context);
 
+    const Border blackRectBorder = Border(
+      top: BorderSide(width: 1.0, color: Colors.black),
+      left: BorderSide(width: 1.0, color: Colors.black),
+      right: BorderSide(width: 1.0, color: Colors.black),
+      bottom: BorderSide(width: 1.0, color: Colors.black),
+    );
+
     // Location setup tiles
     Widget _getListItemTile(BuildContext context, int index) {
       return GestureDetector(
         onTap: () {
           var itemSelected =
               list.singleWhere((item) => item.isSelected, orElse: () => null);
-          // if every single item is not selected, then allow for selection
+          // Allow selection if none are selected
           if (list.every((item) => !item.isSelected)) {
             setState(() {
               // allow selection
@@ -58,23 +65,81 @@ class _CreationState extends State<MeetCreationPage> {
               list[index].isSelected = !list[index].isSelected;
               _selectedLocation = itemSelected.data;
               _upToPage = 1;
+              print(_upToPage);
             });
           }
         },
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 4),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
+            margin: EdgeInsets.symmetric(vertical: 4),
+//            decoration: BoxDecoration(
+//              border: list[index].isSelected
+//                  ? blackRectBorder
+//                  : null,
+//            ),
             child: Card(
-              color: list[index].isSelected ? Color.fromRGBO(179, 242, 255, 0.6) : Colors.white,
-              elevation: 0,
-              child:
-      ListTile(
-      title: Text(list[index].data),
-          ),
-        ))),
+//                  color: list[index].isSelected
+//                      ? Colors.grey
+//                      : Colors.white,
+              elevation: list[index].isSelected ? 10 : 0,
+              child: ListTile(
+                title: Text(list[index].data),
+              ),
+            )),
       );
     }
+
+    Widget _colorDialog() => SimpleDialog(
+          title: Text(
+            "Meeting Created!",
+            textAlign: TextAlign.center,
+          ),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: Text(
+                "Your new meeting has been added to the homescreen.",
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+          backgroundColor: Color.fromRGBO(199, 255, 214, 1),
+          elevation: 4,
+        );
+
+    // Popup to alert user of successful meeting creation
+    _successDialog() {
+      return showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                backgroundColor: Color.fromRGBO(162, 252, 186, 1.0),
+                title: Text(
+                  "Meeting Created!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.w400),
+                ),
+                actions: <Widget>[
+                  Center(
+                      child: MaterialButton(
+                    elevation: 5.0,
+                    child: Text("ok",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 15)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  )),
+                ]);
+          });
+    }
+
+    const int transitionSpeed = 250;
 
     // Left navigation arrow
     Widget leftArrow = Container(
@@ -87,7 +152,7 @@ class _CreationState extends State<MeetCreationPage> {
             int prevPage = (curPage - 1).floor();
             _pageController.animateToPage(
               prevPage,
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: transitionSpeed),
               curve: Curves.easeInOut,
             );
             setState(() {
@@ -101,64 +166,6 @@ class _CreationState extends State<MeetCreationPage> {
       ),
     );
 
-    Widget _colorDialog() => SimpleDialog(
-      title: Text(
-        "Meeting Created!",
-        textAlign: TextAlign.center,
-      ),
-      children: <Widget>[
-        SimpleDialogOption(
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.pop(context);
-            },
-          child: Text(
-            "Your new meeting has been added to the homescreen.",
-            textAlign: TextAlign.center,
-          ),
-        )
-      ],
-      backgroundColor: Color.fromRGBO(199, 255, 214, 1),
-      elevation: 4,
-
-    );
-
-    // Popup to alert user of successful meeting creation
-    _successDialog() {
-      return showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              backgroundColor: Color.fromRGBO(162, 252, 186, 1.0),
-                title: Text(
-                  "Meeting Created!",
-                  textAlign: TextAlign.center,
-                  style:
-                    TextStyle(
-                      fontWeight: FontWeight.w400
-                    ),
-                ),
-                actions: <Widget>[
-                  Center(child:MaterialButton(
-                    elevation: 5.0,
-                    child: Text(
-                      "ok",
-                      textAlign: TextAlign.center,
-                      style:
-                      TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 15
-                      )),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                  )),
-                ]);
-          });
-    }
-
     // Right navigation arrow
     Widget rightArrow = Container(
       child: FlatButton(
@@ -166,7 +173,7 @@ class _CreationState extends State<MeetCreationPage> {
           int curPage = _pageController.page.floor();
           if (curPage <= _upToPage) {
             int nextPage = curPage + 1;
-            if(_upToPage == 3 && _curPage == 3 ) {
+            if (_upToPage == 3 && _curPage == 3) {
               _blankInfo.setName("You");
               _invModel.accept(_blankInfo);
               _blankInfo = new InviteInfo("", "", "", "");
@@ -175,7 +182,7 @@ class _CreationState extends State<MeetCreationPage> {
             if (_pageController.hasClients) {
               _pageController.animateToPage(
                 nextPage,
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: transitionSpeed),
                 curve: Curves.easeInOut,
               );
             }
@@ -208,9 +215,22 @@ class _CreationState extends State<MeetCreationPage> {
       child: Stack(
         children: <Widget>[
           navArrows,
+          Positioned(
+            top: 100,
+            left: 20,
+            child: Container(
+                child: Text(
+              "Location",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 60),
+            )),
+          ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+              padding: const EdgeInsets.fromLTRB(30, 140, 10, 10),
               child: ListView.builder(
                 itemCount: list.length,
                 itemBuilder: _getListItemTile,
@@ -225,7 +245,7 @@ class _CreationState extends State<MeetCreationPage> {
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
         child: Column(children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(0,0,0,230),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 230),
               child: navArrows),
           Center(
               child: Align(
@@ -270,9 +290,9 @@ class _CreationState extends State<MeetCreationPage> {
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
         child: Column(
           children: <Widget>[
-        Padding(
-        padding: const EdgeInsets.fromLTRB(0,0,0,175),
-        child: navArrows),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 175),
+                child: navArrows),
             Center(
               child: TextField(
                 controller: _emailTextController,
@@ -284,7 +304,7 @@ class _CreationState extends State<MeetCreationPage> {
                   labelText: 'Emails',
                 ),
                 onSubmitted: (email) {
-                  if(email != "") {
+                  if (email != "") {
                     setState(() {
                       _upToPage = 3;
                     });
@@ -293,13 +313,12 @@ class _CreationState extends State<MeetCreationPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: Center(
-                child: RaisedButton(
-                  onPressed: () => print("FUCK"),
-                    child: Text('Add Email', style: TextStyle(fontSize: 18))
-
-            ))),
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: Center(
+                    child: RaisedButton(
+                        onPressed: () => print("FUCK"),
+                        child: Text('Add Email',
+                            style: TextStyle(fontSize: 18))))),
           ],
         ));
 
@@ -307,9 +326,20 @@ class _CreationState extends State<MeetCreationPage> {
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
         child: Column(
           children: <Widget>[
-        Padding(
-        padding: const EdgeInsets.fromLTRB(0,0,0,230),
-        child: navArrows),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 150),
+                child: navArrows),
+            Container(
+                padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
+                alignment: Alignment(-1.0, -1.0),
+                child: Text(
+                  "Title",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 60),
+                )),
             Center(
               child: Container(
                 child: Center(

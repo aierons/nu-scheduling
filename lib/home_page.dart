@@ -119,7 +119,7 @@ class HomePage extends StatelessWidget {
       String name = invite.name;
       String loc = invite.location;
       String locString;
-      switch(loc) {
+      switch (loc) {
         case "Curry Student Center":
           locString = "curry";
           break;
@@ -147,9 +147,8 @@ class HomePage extends StatelessWidget {
                 ClipRRect(
                     child: Image.asset('images/$locString.jpg',
                         width: 125, height: 150, fit: BoxFit.cover),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        bottomRight: Radius.circular(8)))
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(8)))
               ],
             ),
             decoration: _cardDecoration(),
@@ -158,14 +157,6 @@ class HomePage extends StatelessWidget {
               top: 155,
               left: 180,
               child: Container(
-//                  decoration: new BoxDecoration(
-//                    color: Colors.redAccent,
-//                    borderRadius: BorderRadius.circular(100),
-//                  ),
-//                  constraints: BoxConstraints(
-//                    maxWidth: 40,
-//                    maxHeight: 40,
-//                  ),
                   child: IconButton(
                 icon: Icon(Icons.keyboard_arrow_down),
                 onPressed: () {
