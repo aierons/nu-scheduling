@@ -62,11 +62,16 @@ class _CreationState extends State<MeetCreationPage> {
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 4),
-          color: list[index].isSelected ? Colors.red[100] : Colors.white,
-          child: ListTile(
-            title: Text(list[index].data),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Card(
+              color: list[index].isSelected ? Color.fromRGBO(179, 242, 255, 0.6) : Colors.white,
+              elevation: 0,
+              child:
+      ListTile(
+      title: Text(list[index].data),
           ),
-        ),
+        ))),
       );
     }
 
@@ -218,7 +223,9 @@ class _CreationState extends State<MeetCreationPage> {
     Widget dateTimeSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
         child: Column(children: <Widget>[
-          Center(child: navArrows),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0,0,0,230),
+              child: navArrows),
           Center(
               child: Align(
             alignment: Alignment.centerLeft,
@@ -262,7 +269,9 @@ class _CreationState extends State<MeetCreationPage> {
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
         child: Column(
           children: <Widget>[
-            navArrows,
+        Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,175),
+        child: navArrows),
             Center(
               child: TextField(
                 controller: _emailTextController,
@@ -295,16 +304,18 @@ class _CreationState extends State<MeetCreationPage> {
 
     Widget titleSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
-        child: Stack(
+        child: Column(
           children: <Widget>[
-            navArrows,
+        Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,230),
+        child: navArrows),
             Center(
               child: Container(
                 child: Center(
                   child: TextField(
                     controller: _titleTextController,
                     decoration: const InputDecoration(
-                      icon: Icon(Icons.person),
+                      icon: Icon(Icons.create),
                       hintText: '"Study Meetup"',
                       labelText: 'Name your meeting',
                     ),
