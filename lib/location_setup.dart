@@ -11,6 +11,7 @@ class ListItem<T> {
 
 // Separate page for changing a given meeting's location
 // Takes in the current InvitePageModel as well as the meeting to change
+// ignore: must_be_immutable
 class LocationSetup extends StatefulWidget {
   InviteInfo _invite;
   InvitePageModel _model;
