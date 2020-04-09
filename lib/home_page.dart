@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
-import './location_setup.dart';
+import './location_change.dart';
 
+// App homepage where meetings are displayed
 class HomePage extends StatelessWidget {
-  final PageController _pageController;
-  HomePage(this._pageController);
-
   @override
   Widget build(BuildContext context) {
-    Color color = Theme.of(context).primaryColor;
     InvitePageModel invModel = Provider.of<InvitePageModel>(context);
     int invCt = invModel.numInv;
-    // Border for cards
+
+    // Border styling for meeting cards
     BoxDecoration _cardDecoration() {
       return BoxDecoration(
           border: Border.all(color: Colors.white, width: 1),
@@ -120,33 +118,52 @@ class HomePage extends StatelessWidget {
       String title = invite.title;
       String name = invite.name;
       String loc = invite.location;
-      String img = loc == "Snell Library" ? "snell" : "curry";
+      String locString;
+      switch (loc) {
+        case "Curry Student Center":
+          locString = "curry";
+          break;
+        case "Snell Library":
+          locString = "snell";
+          break;
+        case "Richards Hall":
+          locString = "richards";
+          break;
+        case "Ryder Hall":
+          locString = "ryder";
+          break;
+      }
 
-      return Container(
-        padding: const EdgeInsets.all(0),
-        margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        child: Column(children: <Widget>[
-          Row(
-            // Card info, picture
-            children: <Widget>[
-              // Card info side
-              _buildInfoSection(title, name, loc),
-              ClipRRect(
-                  child: Image.asset('images/$img.jpg',
-                      width: 125, height: 150, fit: BoxFit.cover),
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      bottomRight: Radius.circular(8)))
-            ],
+      return Stack(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+            child: Row(
+              // Card info, picture
+              children: <Widget>[
+                // Card info side
+                _buildInfoSection(title, name, loc),
+                ClipRRect(
+                    child: Image.asset('images/$locString.jpg',
+                        width: 125, height: 150, fit: BoxFit.cover),
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(8)))
+              ],
+            ),
+            decoration: _cardDecoration(),
           ),
-          IconButton(
-            icon: Icon(Icons.keyboard_arrow_down),
-            onPressed: () {
-              _createAlertDialog(context, true, invite);
-            },
-          )
-        ]),
-        decoration: _cardDecoration(),
+          Positioned(
+              top: 155,
+              left: 180,
+              child: Container(
+                  child: IconButton(
+                icon: Icon(Icons.keyboard_arrow_down),
+                onPressed: () {
+                  _createAlertDialog(context, true, invite);
+                },
+              )))
+        ],
       );
     }
 
@@ -199,7 +216,16 @@ class HomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 10,
       ),
-      body: ListView(children: acceptedMeetings),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed("/createmeeting");
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: Container(
+//        color: Color.fromRGBO(199, 225, 237, 1.0),
+          child: ListView(children: acceptedMeetings)),
       backgroundColor: Colors.white70,
       // This trailing comma makes auto-formatting nicer for build methods.
     );
