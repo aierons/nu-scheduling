@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import './invitepage/inviteinfo.dart';
 import 'invitepage/InvitePageModel.dart';
