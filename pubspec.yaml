@@ -14,6 +14,10 @@ dependencies:
   flutter_datetime_picker: ^1.3.5
   datetime_picker_formfield: ^1.0.0
   provider: ^4.0.4
+  f_datetimerangepicker: ^0.1.3
+  numberpicker: ^1.2.0
+  intl: ^0.16.1
+
 
 dev_dependencies:
   flutter_test:
@@ -23,5 +27,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - images/lotr.jpg
     - images/
+    - images/noinvites.jpg

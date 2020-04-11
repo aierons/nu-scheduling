@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import './inviteinfo.dart';
 import './InvitePageModel.dart';
@@ -34,47 +35,6 @@ class _InvitePageState extends State<InvitePage> {
               ))
         ]);
   }
-
-  // Return text section with title, name, date info
-  Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        // Title+name, location, time+day
-        children: <Widget>[
-          // Title+name
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
-              child: Row(children: <Widget>[
-                Text(
-                  title,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-                ),
-                SizedBox(width: 8),
-                Text(name,
-                    style: TextStyle(color: Colors.grey[500], fontSize: 18))
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.location_on, color: Theme.of(context).accentColor),
-                Text(
-                  loc,
-                )
-              ])),
-          Container(
-              padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-              child: Row(children: <Widget>[
-                Icon(Icons.access_time, color: Theme.of(context).accentColor),
-                Text(
-                  "2pm - 3pm",
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "M",
-                )
-              ]))
-        ],
-      ));
 
   // Popup confirmation dialog for accepting and rejecting invites
   _createAlertDialog(BuildContext context, bool accepted, InviteInfo invite) {
@@ -136,6 +96,7 @@ class _InvitePageState extends State<InvitePage> {
       child: Column(
         children: <Widget>[
           IconButton(
+            padding: const EdgeInsets.fromLTRB(0,0,0,0),
             icon: Icon(
               Icons.check,
               color: Colors.blueAccent,
@@ -144,6 +105,7 @@ class _InvitePageState extends State<InvitePage> {
             onPressed: () => _createAlertDialog(context, true, invite),
           ),
           IconButton(
+            padding: const EdgeInsets.fromLTRB(0,0,0,0),
             icon: Icon(
               Icons.not_interested,
               color: Colors.redAccent,
@@ -159,6 +121,54 @@ class _InvitePageState extends State<InvitePage> {
     String title = invite.title;
     String name = invite.name;
     String loc = invite.location;
+    String date = new DateFormat.yMMMd().format(invite.getDate);
+    String startTime = invite.getStart.format(context).toString();
+    String endTime = invite.getEnd.format(context).toString();
+
+    // Return text section with title, name, date info
+    Widget _buildInfoSection(String title, String name, String loc) => Expanded(
+            child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // Title+name, location, time+day
+          children: <Widget>[
+            // Title+name
+            Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
+                child: Row(children: <Widget>[
+                  Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                  ),
+                  SizedBox(width: 8),
+                  Text(name,
+                      style: TextStyle(color: Colors.grey[500], fontSize: 18))
+                ])),
+            Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                child: Row(children: <Widget>[
+                  Icon(Icons.location_on, color: Theme.of(context).accentColor),
+                  Text(
+                    " $loc",
+                  )
+                ])),
+            Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                child: Row(children: <Widget>[
+                  Icon(Icons.access_time, color: Theme.of(context).accentColor),
+                  Text(
+                    " $startTime - $endTime",
+                  ),
+                ])),
+            Container(
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+                child: Row(children: <Widget>[
+                  Icon(Icons.date_range, color: Theme.of(context).accentColor),
+                  Text(
+                    " $date",
+                  )
+                ]))
+          ],
+        ));
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
       margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -197,10 +207,17 @@ class _InvitePageState extends State<InvitePage> {
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 10,
       ),
-      body: ListView(
+      body: modelInvites.length > 0
+      ? ListView(
         children: inviteCards,
+      )
+      : Container(
+          padding: const EdgeInsets.fromLTRB(0,20,0,0),
+        child:Image.asset(
+          'images/noinvites.jpg',
+          width: 400,),
       ),
-      backgroundColor: Colors.white70,
+      backgroundColor: Colors.white,
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
