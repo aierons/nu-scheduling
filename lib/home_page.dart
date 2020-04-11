@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:layout/services/auth.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
@@ -10,6 +11,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     InvitePageModel invModel = Provider.of<InvitePageModel>(context);
     int invCt = invModel.numInv;
+
+    final AuthService _auth = AuthService();
 
     // Border styling for meeting cards
     BoxDecoration _cardDecoration() {
@@ -215,6 +218,36 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 10,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Profile'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('Settings'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Sign Out'),
+              onTap: () async {
+                await _auth.logOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
