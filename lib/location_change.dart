@@ -47,18 +47,62 @@ class _LocationSetup extends State<LocationSetup> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
-        child: Stack(
-          children: <Widget>[
-            Center(
+    // Left navigation arrow
+    Widget leftArrow = Container(
+      child: FlatButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        },
+        child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Icon(Icons.arrow_back, size: 50, color: Colors.black)),
+      ),
+    );
+
+    // Left/right arrows to move between pages
+    Widget navArrows = Row(
+      children: <Widget>[
+        Expanded(child: Align(alignment: Alignment.topLeft, child: leftArrow)),
+      ],
+    );
+
+    Widget locationSetup = Padding(
+      padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+      child: Stack(
+        children: <Widget>[
+          navArrows,
+          Positioned(
+            top: 110,
+            left: 20,
+            child: Container(
+                child: Text(
+              "Location",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 60),
+            )),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(30, 180, 10, 10),
               child: ListView.builder(
                 itemCount: list.length,
                 itemBuilder: _getListItemTile,
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(0),
+        child: Stack(
+          children: <Widget>[locationSetup],
         ),
       ),
     );
@@ -92,9 +136,14 @@ class _LocationSetup extends State<LocationSetup> {
               // Mutation doesn't refresh widget tree.
               var newLoc = list[index].data;
               InviteInfo newInvite = new InviteInfo(
-                  _invite.title, _invite.getName, newLoc, _invite.getDate);
-              _model.removeAccepted(_invite);
-              _model.accept(newInvite);
+                  _invite.title,
+                  _invite.getName,
+                  newLoc,
+                  _invite.getDate,
+                  _invite.getStart,
+                  _invite.getEnd,
+                  _invite.getInvitees);
+              _model.replaceAccepted(_invite, newInvite);
               Navigator.pop(context);
               Navigator.pop(context);
             }),

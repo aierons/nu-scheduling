@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:layout/services/auth.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import './invitepage/InvitePageModel.dart';
 import 'invitepage/inviteinfo.dart';
+import 'cardInfoPage.dart';
 import './location_change.dart';
 
 // App homepage where meetings are displayed
@@ -32,47 +34,6 @@ class HomePage extends StatelessWidget {
                 ))
           ]);
     }
-
-    // Return text section with title, name, date info
-    Widget _buildInfoSection(String title, String name, String loc) => Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // Title+name, location, time+day
-          children: <Widget>[
-            // Title+name
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
-                child: Row(children: <Widget>[
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
-                  ),
-                  SizedBox(width: 8),
-                  Text(name,
-                      style: TextStyle(color: Colors.grey[500], fontSize: 18))
-                ])),
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-                child: Row(children: <Widget>[
-                  Icon(Icons.location_on, color: Theme.of(context).accentColor),
-                  Text(
-                    loc,
-                  )
-                ])),
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
-                child: Row(children: <Widget>[
-                  Icon(Icons.access_time, color: Theme.of(context).accentColor),
-                  Text(
-                    "2pm - 3pm",
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "M",
-                  )
-                ]))
-          ],
-        ));
 
     // Popup dialog that can change the location of a given meeting
     _createLocationDialog(InviteInfo invite) {
@@ -137,24 +98,87 @@ class HomePage extends StatelessWidget {
           break;
       }
 
-      return Stack(
+      String date = new DateFormat.yMMMd().format(invite.getDate);
+      String startTime = invite.getStart.format(context).toString();
+      String endTime = invite.getEnd.format(context).toString();
+
+      // Return text section with title, name, date info
+      Widget _buildInfoSection(String title, String name, String loc) =>
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // Title+name, location, time+day
+            children: <Widget>[
+              // Title+name
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 5),
+                  child: Row(children: <Widget>[
+                    Text(
+                      title,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                    ),
+                    SizedBox(width: 8),
+                    Text(name,
+                        style: TextStyle(color: Colors.grey[500], fontSize: 18))
+                  ])),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                  child: Row(children: <Widget>[
+                    Icon(Icons.location_on,
+                        color: Theme.of(context).accentColor),
+                    Text(
+                      " $loc",
+                    )
+                  ])),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
+                  child: Row(children: <Widget>[
+                    Icon(Icons.access_time,
+                        color: Theme.of(context).accentColor),
+                    Text(
+                      " $startTime - $endTime",
+                    ),
+                  ])),
+              Container(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+                  child: Row(children: <Widget>[
+                    Icon(Icons.date_range,
+                        color: Theme.of(context).accentColor),
+                    Text(
+                      " $date",
+                    )
+                  ]))
+            ],
+          ));
+
+      Widget card = Stack(
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-            child: Row(
-              // Card info, picture
-              children: <Widget>[
-                // Card info side
-                _buildInfoSection(title, name, loc),
-                ClipRRect(
-                    child: Image.asset('images/$locString.jpg',
-                        width: 125, height: 150, fit: BoxFit.cover),
-                    borderRadius:
-                        BorderRadius.only(topRight: Radius.circular(8)))
-              ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CardInfoPage(invite, invModel)),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+              margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: Row(
+                // Card info, picture
+                children: <Widget>[
+                  // Card info side
+                  _buildInfoSection(title, name, loc),
+                  ClipRRect(
+                      child: Image.asset('images/$locString.jpg',
+                          width: 125, height: 150, fit: BoxFit.cover),
+                      borderRadius:
+                          BorderRadius.only(topRight: Radius.circular(8))),
+                ],
+              ),
+              decoration: _cardDecoration(),
             ),
-            decoration: _cardDecoration(),
           ),
           Positioned(
               top: 155,
@@ -168,6 +192,8 @@ class HomePage extends StatelessWidget {
               )))
         ],
       );
+
+      return card;
     }
 
     final acceptedMeetings = <Widget>[];
