@@ -1,4 +1,3 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +22,10 @@ class _CreationState extends State<MeetCreationPage> {
   final _emailTextController = new TextEditingController();
   int _upToPage = -1;
   int _curPage = 0;
-  InviteInfo _blankInfo = new InviteInfo("", "", "", "");
+  InviteInfo _blankInfo = new InviteInfo(
+      "", "", "", DateTime.now(), TimeOfDay.now(), TimeOfDay.now(), ["You"]);
   String _selectedLocation = "";
+  List<String> _invitees = [];
 
   List<ListItem<String>> list = [
     ListItem<String>('Snell Library'),
@@ -33,8 +34,12 @@ class _CreationState extends State<MeetCreationPage> {
     ListItem<String>('Richards Hall'),
   ];
 
-  final format = DateFormat("yyyy-MM-dd HH:mm");
-  DateTime selectedDate = DateTime.now();
+  final formatDate = DateFormat("MM-dd-yyyy");
+  final formatTime = TimeOfDayFormat.a_space_h_colon_mm;
+//  DateTime selectedDate = DateTime.now();
+  DateTime _selectedDate;
+  TimeOfDay _selectedStart;
+  TimeOfDay _selectedEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +180,14 @@ class _CreationState extends State<MeetCreationPage> {
             int nextPage = curPage + 1;
             if (_upToPage == 3 && _curPage == 3) {
               _blankInfo.setName("You");
+              _blankInfo.setLoc(_selectedLocation);
+              _blankInfo.setStart(_selectedStart);
+              _blankInfo.setDate(_selectedDate);
+              _blankInfo.setEnd(_selectedEnd);
+              _blankInfo.setInvitees(_invitees);
               _invModel.accept(_blankInfo);
-              _blankInfo = new InviteInfo("", "", "", "");
+              _blankInfo = new InviteInfo(
+                  null, null, null, null, null, null, ["Blank ", "list"]);
               _successDialog();
             }
             if (_pageController.hasClients) {
@@ -220,7 +231,7 @@ class _CreationState extends State<MeetCreationPage> {
             left: 20,
             child: Container(
                 child: Text(
-              "Location",
+              "Where?",
               textAlign: TextAlign.left,
               style: TextStyle(
                   color: Colors.black,
@@ -241,50 +252,183 @@ class _CreationState extends State<MeetCreationPage> {
       ),
     );
 
+    Decoration dateTimeBoxDeco = BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.grey, width: 2)));
+//       borderRadius: BorderRadius.circular(6.0));
+
+    Widget chooseDate = Container(
+        child: Stack(
+//        crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Choose a date",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                fontWeight: FontWeight.w400,
+                fontSize: 15),
+          ),
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(10, 0, 0, 30),
+//                  padding: const EdgeInsets.fromLTRB(0, 5, 30, 5),
+            decoration: dateTimeBoxDeco,
+            child: MaterialButton(
+                padding: const EdgeInsets.fromLTRB(0, 20, 200, 5),
+                onPressed: () {
+                  showDatePicker(
+                          context: context,
+                          initialDate: _selectedDate == null
+                              ? DateTime.now()
+                              : _selectedDate,
+                          firstDate: DateTime(2001),
+                          lastDate: DateTime(2021))
+                      .then((date) {
+                    var allFilled = false;
+                    if (_selectedStart != null && _selectedEnd != null) {
+                      allFilled = true;
+                    }
+                    setState(() {
+                      _selectedDate = date;
+                      _upToPage = allFilled ? _upToPage + 1 : _upToPage;
+                    });
+                  });
+                },
+                child: Text(
+                  _selectedDate == null
+                      ? '2020-02-20'
+                      : formatDate.format(_selectedDate),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Color.fromRGBO(100, 100, 100, 1),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20),
+                ))),
+      ],
+    ));
+
+    Widget chooseStart = Container(
+        child: Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Start Time?",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                fontWeight: FontWeight.w400,
+                fontSize: 15),
+          ),
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(10, 0, 0, 30),
+//                  padding: const EdgeInsets.fromLTRB(0, 5, 30, 5),
+            decoration: dateTimeBoxDeco,
+            child: MaterialButton(
+              padding: const EdgeInsets.fromLTRB(0, 20, 200, 5),
+              onPressed: () {
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((time) {
+                  var allFilled = false;
+                  if (_selectedDate != null && _selectedEnd != null) {
+                    allFilled = true;
+                  }
+                  setState(() {
+                    _selectedStart = time;
+                    _upToPage = allFilled ? _upToPage + 1 : _upToPage;
+                  });
+                });
+              },
+              child: Text(
+                _selectedStart == null
+                    ? 'Start time'
+                    : _selectedStart.format(context).toString(),
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Color.fromRGBO(100, 100, 100, 1),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20),
+              ),
+            )),
+      ],
+    ));
+
+    Widget chooseEnd = Container(
+        child: Stack(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "End Time?",
+            textAlign: TextAlign.left,
+            style: TextStyle(
+                color: Color.fromRGBO(100, 100, 100, 1),
+                fontWeight: FontWeight.w400,
+                fontSize: 15),
+          ),
+        ),
+        Container(
+            margin: const EdgeInsets.fromLTRB(10, 0, 0, 30),
+            decoration: dateTimeBoxDeco,
+            child: MaterialButton(
+              padding: const EdgeInsets.fromLTRB(0, 20, 150, 5),
+              onPressed: () {
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((time) {
+                  var allFilled = false;
+                  if (_selectedStart != null && _selectedDate != null) {
+                    allFilled = true;
+                  }
+                  setState(() {
+                    _selectedEnd = time;
+                    _upToPage = allFilled ? _upToPage + 1 : _upToPage;
+                  });
+                });
+              },
+              child: Text(
+                _selectedEnd == null
+                    ? 'End time'
+                    : _selectedEnd.format(context).toString(),
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    color: Color.fromRGBO(100, 100, 100, 1),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20),
+              ),
+            )),
+      ],
+    ));
+
     Widget dateTimeSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
-        child: Column(children: <Widget>[
-          Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 230),
-              child: navArrows),
-          Center(
-              child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Tap below to choose a date and time'),
-          )),
-          Center(
-            child: DateTimeField(
-              format: format,
-              onShowPicker: (context, currentValue) async {
-                final date = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime(1900),
-                    initialDate: currentValue ?? DateTime.now(),
-                    lastDate: DateTime(2100));
-                if (date != null) {
-                  final time = await showTimePicker(
-                    context: context,
-                    initialTime:
-                        TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-                  );
-
-                  // Add date to blank InviteInfo
-                  _blankInfo
-                      .setDate(DateTimeField.combine(date, time).toString());
-                  _blankInfo.setLoc(_selectedLocation);
-                  setState(() {
-                    _upToPage = _upToPage > 2 ? 3 : 2;
-                  });
-                  print(_curPage);
-                  print(_upToPage);
-                  return DateTimeField.combine(date, time);
-                } else {
-                  return currentValue;
-                }
-              },
-            ),
-          ),
-        ]));
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                  child: navArrows),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "When?",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 60),
+                ),
+              ),
+              chooseDate,
+              chooseStart,
+              chooseEnd,
+            ]));
 
     Widget memberSetup = Padding(
         padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
@@ -307,6 +451,7 @@ class _CreationState extends State<MeetCreationPage> {
                   if (email != "") {
                     setState(() {
                       _upToPage = 3;
+                      _invitees.add(email);
                     });
                   }
                 },
@@ -333,12 +478,12 @@ class _CreationState extends State<MeetCreationPage> {
                 padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
                 alignment: Alignment(-1.0, -1.0),
                 child: Text(
-                  "Title",
+                  "Create a meeting",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
-                      fontSize: 60),
+                      fontSize: 40),
                 )),
             Center(
               child: Container(
@@ -348,7 +493,7 @@ class _CreationState extends State<MeetCreationPage> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.create),
                       hintText: '"Study Meetup"',
-                      labelText: 'Name your meeting',
+                      labelText: "What's the name of your meeting?",
                     ),
                     onSubmitted: (title) {
                       if (title != "") {
