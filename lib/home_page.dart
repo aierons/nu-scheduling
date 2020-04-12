@@ -206,7 +206,7 @@ class HomePage extends StatelessWidget {
     Widget mailButton = new Stack(children: <Widget>[
       IconButton(
           padding: const EdgeInsets.fromLTRB(0, 10, 20, 0),
-          icon: Icon(Icons.mail, size: 30),
+          icon: Icon(Icons.mail, size: 32),
           onPressed: () => Navigator.of(context).pushNamed("/invitepage")),
       invCt > 0
           ? new Positioned(
@@ -244,6 +244,17 @@ class HomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 10,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.account_circle, size: 38),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            );
+          },
+        ),
       ),
       drawer: Drawer(
         child: ListView(
