@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "822236590617",
+    "firebase_url": "https://meet-neu.firebaseio.com",
+    "project_id": "meet-neu",
+    "storage_bucket": "meet-neu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822236590617:android:200933c20d45908b0a7088",
+        "android_client_info": {
+          "package_name": "com.example.hello_world"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822236590617-81bvicgrpusl6r3976f55450udcb5c6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbX40QKtiHatZwCedASJAwyQzTMtuBj6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822236590617-81bvicgrpusl6r3976f55450udcb5c6e.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "822236590617-1dthj9rtf5a05u7a21sn8el76na62i3g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.helloWorld"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

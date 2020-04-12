@@ -52,7 +52,6 @@ class _LoginPageState extends State<LoginPage> {
                     // } else if (!input.contains('@northeastern.edu') ||
                     //     !input.contains('@husky.neu.edu')) {
                     //   return 'Enter a Northeastern email';
-                    // } else {
                   } else {
                     return null;
                   }
