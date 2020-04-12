@@ -18,10 +18,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[100],
+      //backgroundColor: Colors.brown[100],
       appBar: AppBar(
-        backgroundColor: Colors.brown[400],
-        elevation: 0.0,
+        backgroundColor: Theme.of(context).primaryColor,
+        elevation: 10.0,
         title: Text('Login Authentication'),
       ),
       body: Container(
@@ -37,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
         //     }
         //   },
         // ),
-        //key: _formKey,
         child: Form(
           key: _formKey,
           child: Column(
@@ -48,16 +47,25 @@ class _LoginPageState extends State<LoginPage> {
                   setState(() => email = input);
                 },
                 validator: (input) {
-                  if (input.isEmpty ||
-                      !input.contains('@northeastern.edu') ||
-                      !input.contains('@husky.neu.edu')) {
-                    return 'Enter a Northeastern email';
+                  if (input.isEmpty) {
+                    return 'Enter an email';
+                    // } else if (!input.contains('@northeastern.edu') ||
+                    //     !input.contains('@husky.neu.edu')) {
+                    //   return 'Enter a Northeastern email';
+                    // } else {
                   } else {
                     return null;
                   }
                 },
-                // onSaved: (input) => _email = input,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: InputDecoration(
+                  hintText: 'Email',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.pink, width: 2)),
+                ),
               ),
               SizedBox(height: 20),
               TextFormField(
@@ -67,7 +75,15 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (input) =>
                     input.length < 6 ? 'Enter your password' : null,
                 //onSaved: (input) => _password = input,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white, width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.pink, width: 2)),
+                ),
                 obscureText: true,
               ),
               SizedBox(height: 20),
