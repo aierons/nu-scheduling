@@ -12,7 +12,10 @@ class InvitePageModel extends ChangeNotifier {
         DateTime.now(),
         TimeOfDay(hour: 13, minute: 0),
         TimeOfDay(hour: 14, minute: 0),
-        ["jeff@gmail.com", "frank@gmail.com", "giveup@gmail.com"])
+        ["intille.s@northeastern.edu",
+          "jeff@husky.neu.edu",
+          "frank@husky.neu.edu",
+        "jim@husky.neu.edu"])
   ];
 
   final List<InviteInfo> _accepted = [];

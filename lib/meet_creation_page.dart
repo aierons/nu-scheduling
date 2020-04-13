@@ -37,9 +37,9 @@ class _CreationState extends State<MeetCreationPage> {
   final formatDate = DateFormat("MM-dd-yyyy");
   final formatTime = TimeOfDayFormat.a_space_h_colon_mm;
 //  DateTime selectedDate = DateTime.now();
-  DateTime _selectedDate;
-  TimeOfDay _selectedStart;
-  TimeOfDay _selectedEnd;
+  DateTime _selectedDate = DateTime.now();
+  TimeOfDay _selectedStart = TimeOfDay(hour: 12, minute: 0);
+  TimeOfDay _selectedEnd = TimeOfDay(hour: 13, minute: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +332,7 @@ class _CreationState extends State<MeetCreationPage> {
               onPressed: () {
                 showTimePicker(
                   context: context,
-                  initialTime: TimeOfDay.now(),
+                  initialTime: _selectedStart,
                 ).then((time) {
                   var allFilled = false;
                   if (_selectedDate != null && _selectedEnd != null) {
@@ -380,7 +380,7 @@ class _CreationState extends State<MeetCreationPage> {
               onPressed: () {
                 showTimePicker(
                   context: context,
-                  initialTime: TimeOfDay.now(),
+                  initialTime: _selectedEnd,
                 ).then((time) {
                   var allFilled = false;
                   if (_selectedStart != null && _selectedDate != null) {
