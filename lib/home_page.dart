@@ -202,6 +202,8 @@ class HomePage extends StatelessWidget {
       acceptedMeetings.add(card);
     });
 
+    var noInvites = invModel.accepted.length == 0;
+
     // Mail button w/notification badge for pending invites
     Widget mailButton = new Stack(children: <Widget>[
       IconButton(
@@ -293,8 +295,13 @@ class HomePage extends StatelessWidget {
         child: Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: Container(
-//        color: Color.fromRGBO(199, 225, 237, 1.0),
+      body: noInvites
+        ? Container(
+        padding: const EdgeInsets.fromLTRB(0,20,0,0),
+          child: Image.asset(
+        'images/makeameeting.jpg',
+        width: 400,))
+      : Container(
           child: ListView(children: acceptedMeetings)),
       backgroundColor: Colors.white70,
       // This trailing comma makes auto-formatting nicer for build methods.
